@@ -38,7 +38,7 @@ int RunMandelbrotFractal ()
             }
         }
 
-        float dx = (float)1 / 200, dy = (float)1 / 200;             //; to check all points from (-2,-2) to (2, 2)
+        float dx = (float)1 / 400, dy = (float)1 / 400;             //; to check all points from (-2,-2) to (2, 2)
                                                                     //; with step 1/200
         //printf ("dx = %f, dy = %f\n", dx, dy);
 
@@ -48,7 +48,7 @@ int RunMandelbrotFractal ()
             assert (iy < 800);
 
             float X0 = -2;                                          //; start from lower right cornel
-            float Y0 =  2 - (float)iy * dy;
+            float Y0 =  1 - (float)iy * dy;
 
             for (int ix = 0; ix < 800; ix++, X0 += dx)
             {
