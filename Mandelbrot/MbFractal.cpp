@@ -7,19 +7,19 @@
 
 int RunMandelbrotFractal ()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Brilliant graphics, amazing fractal!");
-
     sf::VertexArray points(sf::Points, 800 * 800);
 
-    float dx = 1 / 800, dy = 1 / 800;
+    float dx = (float)1 / 200, dy = (float)1 / 200;             //; to check all points from (-2,-2) to (2, 2)
+                                                                //; with step 1/200
+    printf ("dx = %f, dy = %f\n", dx, dy);
 
     for (int iy = 0; iy < 800; iy++)
     {
-        //printf ("iy = <%d>", iy);
+        //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
         assert (iy < 800);
 
-        float X0 = 0;
-        float Y0 = 0 + (float)iy * dy;
+        float X0 = -2;                                          //; start from lower right cornel
+        float Y0 =  2 - (float)iy * dy;
 
         for (int ix = 0; ix < 800; ix++, X0 += dx)
         {
@@ -38,6 +38,11 @@ int RunMandelbrotFractal ()
                 float       X_Y = X * Y;
 
                 float squared_r = squared_X + squared_Y;
+
+                //printf (BLU "iy = %d, ix = %d, for niteration = %d, squared_r = %f, "
+                //           "Y0 = %f, X0 = %f, Y = %f, X = %f\n"
+                //            "-----------------------------------------------------\n", iy, ix, niteration, squared_r, Y0, X0, Y, X);
+
                 if (squared_r >= SQUARED_R_MAX)
                 {
                     break;
@@ -48,9 +53,19 @@ int RunMandelbrotFractal ()
                 Y =       X_Y +       X_Y + Y0;
             }
             if (niteration == NITERATIONMAX)
+            {
+                points[(size_t)(iy * 800 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                points[(size_t)(iy * 800 + ix)].color    = sf::Color::Magenta;
+            }
+            else
+            {
+                points[(size_t)(iy * 800 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                points[(size_t)(iy * 800 + ix)].color    = sf::Color::White;
+            }
         }
-
     }
+
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Brilliant graphics, amazing fractal!");
 
     while (window.isOpen())
     {
@@ -67,7 +82,6 @@ int RunMandelbrotFractal ()
         window.draw(points);                            //; draw all points
         window.display();
     }
-
 
     return 0;
 }
