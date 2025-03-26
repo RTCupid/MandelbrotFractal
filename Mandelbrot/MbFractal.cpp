@@ -11,6 +11,22 @@ int RunMandelbrotFractal ()
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "Brilliant graphics, amazing fractal!");
 
+    sf::Clock fpsClock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
+    int frameCount = 0;
+    float averagedFps = 0;
+
+    sf::Font font;
+    if (!font.loadFromFile("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Bold.otf"))
+    {
+    }
+
+    sf::Text fpsText;
+    fpsText.setFont(font);
+    fpsText.setCharacterSize(20);
+    fpsText.setFillColor(sf::Color::Black);
+    fpsText.setPosition(10, 10);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -24,7 +40,7 @@ int RunMandelbrotFractal ()
 
         float dx = (float)1 / 200, dy = (float)1 / 200;             //; to check all points from (-2,-2) to (2, 2)
                                                                     //; with step 1/200
-        printf ("dx = %f, dy = %f\n", dx, dy);
+        //printf ("dx = %f, dy = %f\n", dx, dy);
 
         for (int iy = 0; iy < 800; iy++)
         {
@@ -78,8 +94,22 @@ int RunMandelbrotFractal ()
             }
         }
 
+        timeSinceLastUpdate += fpsClock.restart();
+        frameCount++;
+
+        if (timeSinceLastUpdate >= sf::seconds(1.f))
+        {
+            averagedFps = (float)frameCount / timeSinceLastUpdate.asSeconds();
+            timeSinceLastUpdate = sf::Time::Zero;
+            frameCount = 0;
+        }
+        fpsText.setString("FPS: " + std::to_string((int)averagedFps));
+
         window.clear();
-        window.draw(points);                            //; draw all points
+
+        window.draw(points);                                        //; draw all points
+        window.draw(fpsText);
+
         window.display();
     }
 
