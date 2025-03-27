@@ -5,11 +5,14 @@
 #include "MbFractal.h"
 #include "../common/colors.h"
 
-int RunMandelbrotFractal ()
+int RunMandelbrotFractal (char* mode, int ntimes)
 {
-    sf::VertexArray points(sf::Points, 800 * 800);
+    printf (GRN "\nmode   = <%s>\n" RESET, mode);
+    printf (GRN "ntimes = <%d>\n" RESET, ntimes);
 
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Brilliant graphics, amazing fractal!");
+    sf::RenderWindow window(sf::VideoMode(1200, 800), "Brilliant graphics, amazing fractal!");
+
+    sf::VertexArray points(sf::Points, 1200 * 800);
 
     sf::Clock fpsClock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
@@ -50,10 +53,10 @@ int RunMandelbrotFractal ()
             float X0 = -2;                                          //; start from lower right cornel
             float Y0 =  1 - (float)iy * dy;
 
-            for (int ix = 0; ix < 800; ix++, X0 += dx)
+            for (int ix = 0; ix < 1200; ix++, X0 += dx)
             {
                 //printf ("ix = <%d>", ix);
-                assert (ix < 800);
+                assert (ix < 1200);
 
                 float X = X0;
                 float Y = Y0;
@@ -83,13 +86,13 @@ int RunMandelbrotFractal ()
                 }
                 if (niteration == NITERATIONMAX)
                 {
-                    points[(size_t)(iy * 800 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                    points[(size_t)(iy * 800 + ix)].color    = sf::Color::Magenta;
+                    points[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                    points[(size_t)(iy * 1200 + ix)].color    = sf::Color::Magenta;
                 }
                 else
                 {
-                    points[(size_t)(iy * 800 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                    points[(size_t)(iy * 800 + ix)].color    = sf::Color::White;
+                    points[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                    points[(size_t)(iy * 1200 + ix)].color    = sf::Color::White;
                 }
             }
         }

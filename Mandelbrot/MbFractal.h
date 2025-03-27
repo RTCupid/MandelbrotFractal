@@ -5,6 +5,6 @@ const int NITERATIONMAX = 256;
 
 const float SQUARED_R_MAX = 10 * 10;
 
-int RunMandelbrotFractal ();
+int RunMandelbrotFractal (char* mode, int ntimes = 1);
 
 #endif
