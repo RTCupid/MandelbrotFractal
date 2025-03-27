@@ -30,8 +30,12 @@ int RunMandelbrotFractal (char* mode, int ntimes)
     sf::Text fpsText;
     fpsText.setFont (font);
     fpsText.setCharacterSize (20);
-    fpsText.setFillColor (sf::Color::Black);
+    fpsText.setFillColor (sf::Color::White);
     fpsText.setPosition (10, 10);
+
+    float offset_y = 0;
+    float offset_x = 0;
+    float scale    = 1;
 
     while (window.isOpen ())
     {
@@ -45,12 +49,17 @@ int RunMandelbrotFractal (char* mode, int ntimes)
             }
         }
 
-        //if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up)) offset_y -= 5
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up))    offset_y += (float)0.05;
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down))  offset_y -= (float)0.05;
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left))  offset_x -= (float)0.05;
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right)) offset_x += (float)0.05;
 
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::P))     scale    /= (float)1.25;
+        if (sf::Keyboard::isKeyPressed (sf::Keyboard::M))     scale    *= (float)1.25;
 
         fpsClock.restart ();
 
-        CalculateMandelbrot (&points);
+        CalculateMandelbrot (&points, offset_x, offset_y, scale);
 
         elapsedTime = fpsClock.restart ();
 
@@ -71,7 +80,7 @@ int RunMandelbrotFractal (char* mode, int ntimes)
     return 0;
 }
 
-void CalculateMandelbrot (sf::VertexArray* points)
+void CalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
 {
     float dx = (float)1 / 400, dy = (float)1 / 400;             //; to check all points from (-2,-2) to (2, 2)
                                                                 //; with step 1/200
@@ -82,10 +91,10 @@ void CalculateMandelbrot (sf::VertexArray* points)
         //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
         assert (iy < 800);
 
-        float X0 = -2;                                          //; start from lower right cornel
-        float Y0 =  1 - (float)iy * dy;
+        float X0 = -2 + offset_x ;                               //; start from lower right cornel
+        float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-        for (int ix = 0; ix < 1200; ix++, X0 += dx)
+        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)      // (iy/800 + offsett)* scale
         {
             //printf ("ix = <%d>", ix);
             assert (ix < 1200);
