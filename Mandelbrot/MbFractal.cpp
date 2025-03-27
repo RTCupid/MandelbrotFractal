@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <stdlib.h>
 #include <SFML/Graphics.hpp>
 
 #include "MbFractal.h"
@@ -10,9 +11,9 @@ int RunMandelbrotFractal (char* mode, int ntimes)
     printf (GRN "\nmode   = <%s>\n" RESET, mode);
     printf (GRN "ntimes = <%d>\n" RESET, ntimes);
 
-    sf::RenderWindow window(sf::VideoMode(1200, 800), "Brilliant graphics, amazing fractal!");
+    sf::RenderWindow window (sf::VideoMode(1200, 800), "Brilliant graphics, amazing fractal!");
 
-    sf::VertexArray points(sf::Points, 1200 * 800);
+    sf::VertexArray points (sf::Points, 1200 * 800);
 
     sf::Clock fpsClock;
 
@@ -21,34 +22,31 @@ int RunMandelbrotFractal (char* mode, int ntimes)
     float Fps = 0;
 
     sf::Font font;
-    if (!font.loadFromFile("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Bold.otf"))
+    if (!font.loadFromFile ("/usr/share/fonts/opentype/urw-base35/NimbusRoman-Bold.otf"))
     {
         fprintf (stderr, RED "Unknown font\n" RESET);
     }
 
     sf::Text fpsText;
-    fpsText.setFont(font);
-    fpsText.setCharacterSize(20);
-    fpsText.setFillColor(sf::Color::Black);
-    fpsText.setPosition(10, 10);
+    fpsText.setFont (font);
+    fpsText.setCharacterSize (20);
+    fpsText.setFillColor (sf::Color::Black);
+    fpsText.setPosition (10, 10);
 
-    sf::Text timeText;
-    fpsText.setFont(font);
-    fpsText.setCharacterSize(20);
-    fpsText.setFillColor(sf::Color::Black);
-    fpsText.setPosition(20, 10);
-
-    while (window.isOpen())
+    while (window.isOpen ())
     {
         sf::Event event;
 
-        while (window.pollEvent(event))
+        while (window.pollEvent (event))
         {
             if (event.type == sf::Event::Closed)
             {
-                window.close();
+                window.close ();
             }
         }
+
+        //if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up)) offset_y -= 5
+
 
         fpsClock.restart ();
 
@@ -56,10 +54,11 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         elapsedTime = fpsClock.restart ();
 
+        printf (BLU "elapsed time = <%f>\n" RESET, elapsedTime.asSeconds ());
+
         Fps = (float)1 / elapsedTime.asSeconds ();
 
-        fpsText.setString  ("FPS: " + std::to_string((int)Fps));
-        //timeText.setString ("FPS: " + std::to_string((int)elapsedTime));
+        fpsText.setString  ("FPS: " + std::to_string (Fps));
 
         window.clear ();
 
@@ -117,16 +116,17 @@ void CalculateMandelbrot (sf::VertexArray* points)
 
                 Y =       X_Y +       X_Y + Y0;
             }
-            if (niteration == NITERATIONMAX)
-            {
+
+            //if (niteration == NITERATIONMAX)
+            //{
                 (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color::Magenta;
-            }
-            else
-            {
-                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color::White;
-            }
+                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
+            //}
+            //else
+            //{
+            //    (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+            //    (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color::White;
+            //}
         }
     }
 }
