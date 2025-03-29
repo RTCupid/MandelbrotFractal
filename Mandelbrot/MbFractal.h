@@ -8,14 +8,14 @@ typedef struct navigation_t
     float scale;
 } navigation_t;
 
-const int NITERATIONMAX = 256;
+const int NITERATIONMAX   = 256;
 
 const float SQUARED_R_MAX = 10 * 10;
 
-int  RunMandelbrotFractal (int ntimes = 1);
+int   RunMandelbrotFractal (char* mode, int ntimes = 1);
 
-void Navigation           (navigation_t* nvg);
+void  Navigation           (navigation_t* nvg);
 
-void CalculateMandelbrot  (sf::VertexArray* points, float offset_x, float offset_y, float scale);
+void  CalculateMandelbrot  (sf::VertexArray* points, float offset_x, float offset_y, float scale);
 
 #endif

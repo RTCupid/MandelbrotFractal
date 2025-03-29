@@ -15,16 +15,20 @@ int main(int argc, char* argv[])
         printf ("argv[%d] = <%s>\n", i, argv[i]);
     }
 
-    if (argc > 1)
+    if (argc > 2)
     {
-        RunMandelbrotFractal (atoi (argv[1]));
+        RunMandelbrotFractal (argv[1], atoi (argv[2]));
+    }
+    else if (argc > 1)
+    {
+        RunMandelbrotFractal (argv[1]);
     }
     else
     {
-        printf (RED "Enter mode of program to start\n" RESET);
+        printf (RED "Unknown mode of program\n"
+            "Enter \"common\" or \"intrinsics\"\n" RESET);
         return 0;
     }
-
 
 
     return 0;
