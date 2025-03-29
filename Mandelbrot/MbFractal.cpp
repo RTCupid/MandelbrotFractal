@@ -127,31 +127,58 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
 
-                float X = X0;
-                float Y = Y0;
+                float X[4] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
+                float Y[4] = {Y0, Y0,              Y0,                  Y0                 };
 
-                int niteration = 0;
+                int niteration[4] = {};
+                int        cmp[4] = {1, 1, 1, 1};
 
-                for (; niteration < NITERATIONMAX; niteration++)
+                for (; niteration[0] < NITERATIONMAX &&
+                       niteration[1] < NITERATIONMAX &&
+                       niteration[2] < NITERATIONMAX &&
+                       niteration[3] < NITERATIONMAX; niteration[0] += cmp[0],
+                                                      niteration[1] += cmp[1],
+                                                      niteration[2] += cmp[2],
+                                                      niteration[3] += cmp[3])
                 {
-                    float squared_X = X * X;
-                    float squared_Y = Y * Y;
-                    float       X_Y = X * Y;
+                    float squared_X[4] = {X[0] * X[0], X[1] * X[1], X[2] * X[2], X[3] * X[3]};
+                    float squared_Y[4] = {Y[0] * Y[0], Y[1] * Y[1], Y[2] * Y[2], Y[3] * Y[3]};
+                    float       X_Y[4] = {X[0] * Y[0], X[1] * Y[1], X[2] * Y[2], X[3] * Y[3]};;
 
-                    float squared_r = squared_X + squared_Y;
+                    float squared_r[4] = {squared_X[0] + squared_Y[0], squared_X[1] + squared_Y[1], squared_X[2] + squared_Y[2], squared_X[3] + squared_Y[3]};
 
-                    if (squared_r  >= SQUARED_R_MAX)
+                    if (squared_r[0]  >= SQUARED_R_MAX) cmp[0] = 0;
+                    if (squared_r[1]  >= SQUARED_R_MAX) cmp[1] = 0;
+                    if (squared_r[2]  >= SQUARED_R_MAX) cmp[2] = 0;
+                    if (squared_r[3]  >= SQUARED_R_MAX) cmp[3] = 0;
+
+                    if (cmp[0] == 0 && cmp[1] == 0 && cmp[2] == 0 && cmp[3] == 0)
                     {
                         break;
                     }
 
-                    X = squared_X - squared_Y + X0;
+                    X[0] = squared_X[0] - squared_Y[0] + X0 + dx * 0;
+                    X[1] = squared_X[1] - squared_Y[1] + X0 + dx * 1 * scale;
+                    X[2] = squared_X[2] - squared_Y[2] + X0 + dx * 2 * scale;
+                    X[3] = squared_X[3] - squared_Y[3] + X0 + dx * 3 * scale;
 
-                    Y =       X_Y +       X_Y + Y0;
+                    Y[0] =       X_Y[0] +       X_Y[0] + Y0;
+                    Y[1] =       X_Y[1] +       X_Y[1] + Y0;
+                    Y[2] =       X_Y[2] +       X_Y[2] + Y0;
+                    Y[3] =       X_Y[3] +       X_Y[3] + Y0;
                 }
 
-                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 0)].position = sf::Vector2f(static_cast<float>(ix + 0), static_cast<float>(iy));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 1)].position = sf::Vector2f(static_cast<float>(ix + 1), static_cast<float>(iy));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 2)].position = sf::Vector2f(static_cast<float>(ix + 2), static_cast<float>(iy));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 3)].position = sf::Vector2f(static_cast<float>(ix + 3), static_cast<float>(iy));
+
+
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 0)].color    = sf::Color((sf::Uint8)(256 - niteration[0] * 16), 0, (sf::Uint8)(256 - niteration[0] * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 1)].color    = sf::Color((sf::Uint8)(256 - niteration[1] * 16), 0, (sf::Uint8)(256 - niteration[1] * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 2)].color    = sf::Color((sf::Uint8)(256 - niteration[2] * 16), 0, (sf::Uint8)(256 - niteration[2] * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + 3)].color    = sf::Color((sf::Uint8)(256 - niteration[3] * 16), 0, (sf::Uint8)(256 - niteration[3] * 16));
+
             }
         }
     }
