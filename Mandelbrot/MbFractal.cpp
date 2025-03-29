@@ -122,7 +122,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            for (int ix = 0; ix < SIZE_SCREEN_X; ix++, X0 += dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix += 4, X0 += 4 * dx * scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
@@ -140,7 +140,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     float squared_r = squared_X + squared_Y;
 
-                    if (squared_r >= SQUARED_R_MAX)
+                    if (squared_r  >= SQUARED_R_MAX)
                     {
                         break;
                     }
@@ -192,7 +192,7 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offse
 
                     float squared_r = squared_X + squared_Y;
 
-                    if (squared_r >= SQUARED_R_MAX)
+                    if (squared_r  >= SQUARED_R_MAX)
                     {
                         break;
                     }
