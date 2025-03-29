@@ -32,9 +32,7 @@ int RunMandelbrotFractal (int ntimes)
     fpsText.setFillColor (sf::Color::White);
     fpsText.setPosition (10, 10);
 
-    float offset_y = 0;
-    float offset_x = 0;
-    float scale    = 1;
+    navigation_t nvg {0, 0, 1};
 
     while (window.isOpen ())
     {
@@ -48,17 +46,11 @@ int RunMandelbrotFractal (int ntimes)
             }
         }
 
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up))    offset_y += (float)0.05;
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down))  offset_y -= (float)0.05;
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left))  offset_x -= (float)0.05;
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right)) offset_x += (float)0.05;
-
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::P))     scale    /= (float)1.25;
-        if (sf::Keyboard::isKeyPressed (sf::Keyboard::M))     scale    *= (float)1.25;
+        Navigation (&nvg);
 
         fpsClock.restart ();
 
-        CalculateMandelbrot (&points, offset_x, offset_y, scale);
+        CalculateMandelbrot (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
 
         elapsedTime = fpsClock.restart ();
 
@@ -71,7 +63,7 @@ int RunMandelbrotFractal (int ntimes)
         window.clear ();
 
         window.draw (points);                                        //; draw all points
-        //window.draw (fpsText);
+        window.draw (fpsText);
 
         window.display ();
     }
@@ -79,23 +71,32 @@ int RunMandelbrotFractal (int ntimes)
     return 0;
 }
 
+void Navigation (navigation_t* nvg)
+{
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Up))    nvg->offset_y += (float)0.05;
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Down))  nvg->offset_y -= (float)0.05;
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Left))  nvg->offset_x -= (float)0.05;
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::Right)) nvg->offset_x += (float)0.05;
+
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::P))     nvg->scale    /= (float)1.25;
+    if (sf::Keyboard::isKeyPressed (sf::Keyboard::M))     nvg->scale    *= (float)1.25;
+}
+
 void CalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
 {
-    float dx = (float)1 / 400, dy = (float)1 / 400;             //; to check all points from (-2,-2) to (2, 2)
-                                                                //; with step 1/200
-    //printf ("dx = %f, dy = %f\n", dx, dy);
+    float dx = (float)1 / 400, dy = (float)1 / 400;
 
     for (int iy = 0; iy < 800; iy++)
     {
         //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
         assert (iy < 800);
 
-        float X0 = -2 + offset_x ;                               //; start from lower right cornel
+        float X0 = -2 + offset_x ;                                      //; start from upper left cornel
         float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)      // (iy/800 + offsett)* scale
+        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
         {
-            //printf ("ix = <%d>", ix);
+            //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
             assert (ix < 1200);
 
             float X = X0;
@@ -111,10 +112,6 @@ void CalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_
 
                 float squared_r = squared_X + squared_Y;
 
-                //printf (BLU "iy = %d, ix = %d, for niteration = %d, squared_r = %f, "
-                //           "Y0 = %f, X0 = %f, Y = %f, X = %f\n"
-                //            "-----------------------------------------------------\n", iy, ix, niteration, squared_r, Y0, X0, Y, X);
-
                 if (squared_r >= SQUARED_R_MAX)
                 {
                     break;
@@ -125,16 +122,8 @@ void CalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_
                 Y =       X_Y +       X_Y + Y0;
             }
 
-            //if (niteration == NITERATIONMAX)
-            //{
-                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
-            //}
-            //else
-            //{
-            //    (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-            //    (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color::White;
-            //}
+            (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+            (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
         }
     }
 }
