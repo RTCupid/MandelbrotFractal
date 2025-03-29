@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <SFML/Graphics.hpp>
 
 #include "common/colors.h"
@@ -16,7 +17,7 @@ int main(int argc, char* argv[])
 
     if (argc > 1)
     {
-        RunMandelbrotFractal (argv[1]);
+        RunMandelbrotFractal (atoi (argv[1]));
     }
     else
     {
