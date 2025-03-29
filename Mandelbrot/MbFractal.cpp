@@ -11,9 +11,9 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 {
     printf (GRN "ntimes = <%d>\n" RESET, ntimes);
 
-    sf::RenderWindow window (sf::VideoMode(1200, 800), "Brilliant graphics, amazing fractal!");
+    sf::RenderWindow window (sf::VideoMode(SIZE_SCREEN_X, SIZE_SCREEN_Y), "Brilliant graphics, amazing fractal!");
 
-    sf::VertexArray points (sf::Points, 1200 * 800);
+    sf::VertexArray points (sf::Points, SIZE_SCREEN_X * SIZE_SCREEN_Y);
 
     sf::Clock fpsClock;
 
@@ -114,18 +114,18 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     {
         assert (itest < ntimes);
 
-        for (int iy = 0; iy < 800; iy++)
+        for (int iy = 0; iy < SIZE_SCREEN_Y; iy++)
         {
             //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
-            assert (iy < 800);
+            assert (iy < SIZE_SCREEN_Y);
 
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix++, X0 += dx * scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
-                assert (ix < 1200);
+                assert (ix < SIZE_SCREEN_X);
 
                 float X = X0;
                 float Y = Y0;
@@ -150,8 +150,8 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y =       X_Y +       X_Y + Y0;
                 }
 
-                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
             }
         }
     }
@@ -166,18 +166,18 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offse
     {
         assert (itest < ntimes);
 
-        for (int iy = 0; iy < 800; iy++)
+        for (int iy = 0; iy < SIZE_SCREEN_Y; iy++)
         {
             //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
-            assert (iy < 800);
+            assert (iy < SIZE_SCREEN_Y);
 
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix++, X0 += dx * scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
-                assert (ix < 1200);
+                assert (ix < SIZE_SCREEN_X);
 
                 float X = X0;
                 float Y = Y0;
@@ -202,8 +202,8 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offse
                     Y =       X_Y +       X_Y + Y0;
                 }
 
-                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                (*points)[(size_t)(iy * SIZE_SCREEN_X + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
             }
         }
     }
