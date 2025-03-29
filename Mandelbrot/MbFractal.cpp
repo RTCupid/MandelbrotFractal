@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SFML/Graphics.hpp>
 
 #include "MbFractal.h"
@@ -34,6 +35,14 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
     navigation_t nvg {0, 0, 1};
 
+    FILE* Measuring_FILE = fopen ("Measuring.txt", "w");
+    if (!Measuring_FILE)
+    {
+        fprintf (stderr, RED "ERROR: can't open file to write \"Measuring.txt\"\n" RESET);
+    }
+
+    fprintf (Measuring_FILE, "Time of frame (seconds):\n");
+
     while (window.isOpen ())
     {
         sf::Event event;
@@ -50,11 +59,24 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         fpsClock.restart ();
 
-        CalculateMandelbrot (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
+        if      (strcmp (mode, "common") == 0)
+        {
+            CommonCalculateMandelbrot     (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
+        }
+        else if (strcmp (mode, "intrinsics") == 0)
+        {
+            IntrinsicsCalculateMandelbrot (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
+        }
+        else
+        {
+            fprintf (stderr, RED "Unknown mode: use mode: \"common\" or \"intrinsics\"\n" RESET);
+            return 1;
+        }
 
         elapsedTime = fpsClock.restart ();
 
-        printf (BLU "elapsed time = <%f>\n" RESET, elapsedTime.asSeconds ());
+        printf  (            BLU "elapsed time = <%f>\n" RESET, elapsedTime.asSeconds ());
+        fprintf (Measuring_FILE, "%f\n",                        elapsedTime.asSeconds ());
 
         Fps = (float)1 / elapsedTime.asSeconds ();
 
@@ -82,7 +104,53 @@ void Navigation (navigation_t* nvg)
     if (sf::Keyboard::isKeyPressed (sf::Keyboard::M))     nvg->scale    *= (float)1.25;
 }
 
-void CalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
+void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
+{
+    float dx = (float)1 / 400, dy = (float)1 / 400;
+
+    for (int iy = 0; iy < 800; iy++)
+    {
+        //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
+        assert (iy < 800);
+
+        float X0 = -2 + offset_x ;                                      //; start from upper left cornel
+        float Y0 =  1 + offset_y - (float)iy * dy * scale;
+
+        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
+        {
+            //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
+            assert (ix < 1200);
+
+            float X = X0;
+            float Y = Y0;
+
+            int niteration = 0;
+
+            for (; niteration < NITERATIONMAX; niteration++)
+            {
+                float squared_X = X * X;
+                float squared_Y = Y * Y;
+                float       X_Y = X * Y;
+
+                float squared_r = squared_X + squared_Y;
+
+                if (squared_r >= SQUARED_R_MAX)
+                {
+                    break;
+                }
+
+                X = squared_X - squared_Y + X0;
+
+                Y =       X_Y +       X_Y + Y0;
+            }
+
+            (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+            (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
+        }
+    }
+}
+
+void CommonCalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
 {
     float dx = (float)1 / 400, dy = (float)1 / 400;
 

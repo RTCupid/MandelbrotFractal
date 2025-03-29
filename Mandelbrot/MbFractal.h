@@ -12,10 +12,12 @@ const int NITERATIONMAX   = 256;
 
 const float SQUARED_R_MAX = 10 * 10;
 
-int   RunMandelbrotFractal (char* mode, int ntimes = 1);
+int   RunMandelbrotFractal           (char* mode, int ntimes = 1);
 
-void  Navigation           (navigation_t* nvg);
+void  Navigation                     (navigation_t* nvg);
 
-void  CalculateMandelbrot  (sf::VertexArray* points, float offset_x, float offset_y, float scale);
+void  CommonCalculateMandelbrot      (sf::VertexArray* points, float offset_x, float offset_y, float scale);
+
+void  IntrinsicsCalculateMandelbrot  (sf::VertexArray* points, float offset_x, float offset_y, float scale);
 
 #endif
