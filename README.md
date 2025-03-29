@@ -1,10 +1,23 @@
-# MandelbrotFractal
-## The most beautiful graphics for Mandelbrot fractal, and ingenious optimization of calculations
+# Laboratory work 3.3.3.<br>Optimization of calculations for points in Mandelbrot fractal with help of intrinsics. Making beautiful graphics with help of SFML
 
-  Program use the most popular library for Graphics (but not as cool as /*TXLib*/) SFML
+## Contents
+- [0. Annotation](#annotation)
+- [1. Introduction](#introduction)
+- [2. Methods](#methods)
+- [3. Results](#results)
+- [4. Conclusion](#conclusion)
+- [5. Appendix](#appendix)
 
-## How to run program
+## Annotation
 
-  You should only write "make" and touch Enter
+## Introduction
 
-  Then you can write "./sfml-app" and again write Enter
+  In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is badly optimized by the compiler if they are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
+
+## Methods
+
+## Results
+
+## Conclusion
+
+## Appendix
