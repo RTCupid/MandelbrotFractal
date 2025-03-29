@@ -8,7 +8,6 @@
 
 int RunMandelbrotFractal (int ntimes)
 {
-    printf (GRN "\nmode   = <%s>\n" RESET, mode);
     printf (GRN "ntimes = <%d>\n" RESET, ntimes);
 
     sf::RenderWindow window (sf::VideoMode(1200, 800), "Brilliant graphics, amazing fractal!");
@@ -72,7 +71,7 @@ int RunMandelbrotFractal (int ntimes)
         window.clear ();
 
         window.draw (points);                                        //; draw all points
-        window.draw (fpsText);
+        //window.draw (fpsText);
 
         window.display ();
     }
