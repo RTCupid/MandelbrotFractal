@@ -16,7 +16,13 @@
 
 ## Methods
 
+  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time.
+
 ## Results
+
+### Model
+
+  I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write 
 
 ## Conclusion
 
