@@ -16,8 +16,8 @@ int   RunMandelbrotFractal           (char* mode, int ntimes = 1);
 
 void  Navigation                     (navigation_t* nvg);
 
-void  CommonCalculateMandelbrot      (sf::VertexArray* points, float offset_x, float offset_y, float scale);
+void  CommonCalculateMandelbrot      (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale);
 
-void  IntrinsicsCalculateMandelbrot  (sf::VertexArray* points, float offset_x, float offset_y, float scale);
+void  IntrinsicsCalculateMandelbrot  (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale);
 
 #endif

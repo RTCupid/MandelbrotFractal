@@ -61,11 +61,11 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         if      (strcmp (mode, "common") == 0)
         {
-            CommonCalculateMandelbrot     (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
+            CommonCalculateMandelbrot     (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale);
         }
         else if (strcmp (mode, "intrinsics") == 0)
         {
-            IntrinsicsCalculateMandelbrot (&points, nvg.offset_x, nvg.offset_y, nvg.scale);
+            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale);
         }
         else
         {
@@ -102,9 +102,11 @@ void Navigation (navigation_t* nvg)
 
     if (sf::Keyboard::isKeyPressed (sf::Keyboard::P))     nvg->scale    /= (float)1.25;
     if (sf::Keyboard::isKeyPressed (sf::Keyboard::M))     nvg->scale    *= (float)1.25;
+
+    return;
 }
 
-void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
+void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
 {
     float dx = (float)1 / 400, dy = (float)1 / 400;
 
@@ -148,9 +150,11 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, float offset_x, flo
             (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
         }
     }
+
+    return;
 }
 
-void CommonCalculateMandelbrot (sf::VertexArray* points, float offset_x, float offset_y, float scale)
+void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
 {
     float dx = (float)1 / 400, dy = (float)1 / 400;
 
@@ -194,4 +198,6 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, float offset_x, float o
             (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
         }
     }
+
+    return;
 }
