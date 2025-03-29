@@ -14,11 +14,7 @@ int main(int argc, char* argv[])
         printf ("argv[%d] = <%s>\n", i, argv[i]);
     }
 
-    if (argc > 2)
-    {
-        RunMandelbrotFractal (argv[1], atoi(argv[2]));
-    }
-    else if (argc > 1)
+    if (argc > 1)
     {
         RunMandelbrotFractal (argv[1]);
     }

@@ -6,7 +6,7 @@
 #include "MbFractal.h"
 #include "../common/colors.h"
 
-int RunMandelbrotFractal (char* mode, int ntimes)
+int RunMandelbrotFractal (int ntimes)
 {
     printf (GRN "\nmode   = <%s>\n" RESET, mode);
     printf (GRN "ntimes = <%d>\n" RESET, ntimes);
