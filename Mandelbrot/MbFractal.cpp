@@ -108,96 +108,104 @@ void Navigation (navigation_t* nvg)
 
 void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
 {
-    float dx = (float)1 / 400, dy = (float)1 / 400;
+    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
 
-    for (int iy = 0; iy < 800; iy++)
+    for (int itest = 0; itest < ntimes; itest++)
     {
-        //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
-        assert (iy < 800);
+        assert (itest < ntimes);
 
-        float X0 = -2 + offset_x ;                                      //; start from upper left cornel
-        float Y0 =  1 + offset_y - (float)iy * dy * scale;
-
-        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
+        for (int iy = 0; iy < 800; iy++)
         {
-            //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
-            assert (ix < 1200);
+            //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
+            assert (iy < 800);
 
-            float X = X0;
-            float Y = Y0;
+            float X0 = -2 + offset_x ;                                      //; start from upper left cornel
+            float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            int niteration = 0;
-
-            for (; niteration < NITERATIONMAX; niteration++)
+            for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
             {
-                float squared_X = X * X;
-                float squared_Y = Y * Y;
-                float       X_Y = X * Y;
+                //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
+                assert (ix < 1200);
 
-                float squared_r = squared_X + squared_Y;
+                float X = X0;
+                float Y = Y0;
 
-                if (squared_r >= SQUARED_R_MAX)
+                int niteration = 0;
+
+                for (; niteration < NITERATIONMAX; niteration++)
                 {
-                    break;
+                    float squared_X = X * X;
+                    float squared_Y = Y * Y;
+                    float       X_Y = X * Y;
+
+                    float squared_r = squared_X + squared_Y;
+
+                    if (squared_r >= SQUARED_R_MAX)
+                    {
+                        break;
+                    }
+
+                    X = squared_X - squared_Y + X0;
+
+                    Y =       X_Y +       X_Y + Y0;
                 }
 
-                X = squared_X - squared_Y + X0;
-
-                Y =       X_Y +       X_Y + Y0;
+                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
             }
-
-            (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-            (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
         }
     }
-
     return;
 }
 
 void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
 {
-    float dx = (float)1 / 400, dy = (float)1 / 400;
+    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
 
-    for (int iy = 0; iy < 800; iy++)
+    for (int itest = 0; itest < ntimes; itest++)
     {
-        //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
-        assert (iy < 800);
+        assert (itest < ntimes);
 
-        float X0 = -2 + offset_x ;                                      //; start from upper left cornel
-        float Y0 =  1 + offset_y - (float)iy * dy * scale;
-
-        for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
+        for (int iy = 0; iy < 800; iy++)
         {
-            //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
-            assert (ix < 1200);
+            //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
+            assert (iy < 800);
 
-            float X = X0;
-            float Y = Y0;
+            float X0 = -2 + offset_x ;                                      //; start from upper left cornel
+            float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            int niteration = 0;
-
-            for (; niteration < NITERATIONMAX; niteration++)
+            for (int ix = 0; ix < 1200; ix++, X0 += dx * scale)
             {
-                float squared_X = X * X;
-                float squared_Y = Y * Y;
-                float       X_Y = X * Y;
+                //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
+                assert (ix < 1200);
 
-                float squared_r = squared_X + squared_Y;
+                float X = X0;
+                float Y = Y0;
 
-                if (squared_r >= SQUARED_R_MAX)
+                int niteration = 0;
+
+                for (; niteration < NITERATIONMAX; niteration++)
                 {
-                    break;
+                    float squared_X = X * X;
+                    float squared_Y = Y * Y;
+                    float       X_Y = X * Y;
+
+                    float squared_r = squared_X + squared_Y;
+
+                    if (squared_r >= SQUARED_R_MAX)
+                    {
+                        break;
+                    }
+
+                    X = squared_X - squared_Y + X0;
+
+                    Y =       X_Y +       X_Y + Y0;
                 }
 
-                X = squared_X - squared_Y + X0;
-
-                Y =       X_Y +       X_Y + Y0;
+                (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
+                (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
             }
-
-            (*points)[(size_t)(iy * 1200 + ix)].position = sf::Vector2f(static_cast<float>(ix), static_cast<float>(iy));
-            (*points)[(size_t)(iy * 1200 + ix)].color    = sf::Color((sf::Uint8)(256 - niteration * 16), 0, (sf::Uint8)(256 - niteration * 16));
         }
     }
-
     return;
 }

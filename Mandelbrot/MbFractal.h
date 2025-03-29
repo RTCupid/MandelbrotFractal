@@ -8,9 +8,11 @@ typedef struct navigation_t
     float scale;
 } navigation_t;
 
-const int NITERATIONMAX   = 256;
+const int   NITERATIONMAX = 256;
 
 const float SQUARED_R_MAX = 10 * 10;
+
+const int   FACTOR_D      = 400;
 
 int   RunMandelbrotFractal           (char* mode, int ntimes = 1);
 
