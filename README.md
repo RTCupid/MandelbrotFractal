@@ -22,7 +22,9 @@
 
 ### Model
 
-  I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write 
+  I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write.
+
+  <img src="/img/FractalMb.png">
 
 ## Conclusion
 
