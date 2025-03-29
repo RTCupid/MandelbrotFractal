@@ -29,7 +29,9 @@
 
   Also model have command line argument "ntests" which shows how many times to calculate all points in one screen update. This is so that you can find the time with less error if you have more calculations in one test. By default ntests = 1.
 
-###
+### Measurements
+
+  
 
   
 
