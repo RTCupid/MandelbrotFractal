@@ -139,7 +139,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 float niterationmax[NUMBER_POINTS_IN_PACK] = {};
                 mm_set_ps1 (niterationmax, NITERATIONMAX);
 
-                for (; mm_cmple_ps (niteration, niterationmax); mm_add_ps (niteration, cmp))
+                for (; mm_cmple_ps (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
                 {
                     //printf ("niteration = %d\n", (int) niteration[1]);
                     float squared_X[NUMBER_POINTS_IN_PACK] = {};
@@ -149,25 +149,11 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     int index = 0;
 
-                    for (; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        squared_X[index] = X[index] * X[index];
-                    }
+                    mm_mul_ps (squared_X, X, X);
+                    mm_mul_ps (squared_Y, Y, Y);
+                    mm_mul_ps (      X_Y, X, Y);
 
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        squared_Y[index] = Y[index] * Y[index];
-                    }
-
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                              X_Y[index] = X[index] * Y[index];
-                    }
-
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        squared_r[index] = squared_X[index] + squared_Y[index];
-                    }
+                    mm_add_ps (squared_r, squared_X, squared_Y);
 
                     for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
@@ -201,11 +187,20 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
-void mm_add_ps (float niteration[NUMBER_POINTS_IN_PACK], float cmp[NUMBER_POINTS_IN_PACK])
+void mm_mul_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
 {
     for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
     {
-        niteration[index] += cmp[index];
+        dst[index] = first_array[index] * second_array[index];
+    }
+    return;
+}
+
+void mm_add_ps (float dst[NUMBER_POINTS_IN_PACK], float niteration[NUMBER_POINTS_IN_PACK], float cmp[NUMBER_POINTS_IN_PACK])
+{
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        dst[index] = niteration[index] + cmp[index];
     }
     return;
 }

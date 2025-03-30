@@ -34,6 +34,8 @@ bool  mm_cmple_ps                    (float niteration[NUMBER_POINTS_IN_PACK], f
 
 void  mm_set_ps1                     (float niterationmax[NUMBER_POINTS_IN_PACK], float value);
 
-void  mm_add_ps                      (float niteration[NUMBER_POINTS_IN_PACK], float cmp[NUMBER_POINTS_IN_PACK]);
+void  mm_add_ps                      (float dst[NUMBER_POINTS_IN_PACK], float niteration[NUMBER_POINTS_IN_PACK], float cmp[NUMBER_POINTS_IN_PACK]);
+
+void  mm_mul_ps                      (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
 #endif
