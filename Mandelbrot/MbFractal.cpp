@@ -132,16 +132,14 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 float Y[NUMBER_POINTS_IN_PACK] = {Y0, Y0             , Y0                 , Y0                 };
 
                 float niteration[NUMBER_POINTS_IN_PACK] = {};
-                float        cmp[NUMBER_POINTS_IN_PACK] = {1, 1, 1, 1};
+
+                float        cmp[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps1  (cmp,          1);
 
                 float niterationmax[NUMBER_POINTS_IN_PACK] = {};
-
                 mm_set_ps1 (niterationmax, NITERATIONMAX);
 
-                for (; mm_cmple_ps (niteration, niterationmax); niteration[0] += cmp[0],
-                                                      niteration[1] += cmp[1],
-                                                      niteration[2] += cmp[2],
-                                                      niteration[3] += cmp[3])
+                for (; mm_cmple_ps (niteration, niterationmax); mm_add_ps (niteration, cmp))
                 {
                     //printf ("niteration = %d\n", (int) niteration[1]);
                     float squared_X[NUMBER_POINTS_IN_PACK] = {};
@@ -203,12 +201,22 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
+void mm_add_ps (float niteration[NUMBER_POINTS_IN_PACK], float cmp[NUMBER_POINTS_IN_PACK])
+{
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        niteration[index] += cmp[index];
+    }
+    return;
+}
+
 void mm_set_ps1 (float niterationmax[NUMBER_POINTS_IN_PACK], float value)
 {
     for (int index= 0; index < NUMBER_POINTS_IN_PACK; index++)
     {
         niterationmax[index] = value;
     }
+    return;
 }
 
 
