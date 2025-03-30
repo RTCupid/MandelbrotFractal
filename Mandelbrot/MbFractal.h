@@ -30,18 +30,22 @@ void  CommonCalculateMandelbrot      (sf::VertexArray* points, int ntimes, float
 
 void  IntrinsicsCalculateMandelbrot  (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale);
 
-bool  mm_cmple_ps111                    (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+void  SetArrayIndex                  (float array_index[NUMBER_POINTS_IN_PACK]);
 
-void  mm_cmple_ps                    (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+void  PrintArray                     (float array[NUMBER_POINTS_IN_PACK]);
 
-void  mm_set_ps1                     (float dst[NUMBER_POINTS_IN_PACK], float value);
+inline bool  mm_cmple_ps111          (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
-void  mm_add_ps                      (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+inline void  mm_cmple_ps             (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
-void  mm_sub_ps                      (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+inline void  mm_set_ps1              (float dst[NUMBER_POINTS_IN_PACK], float value);
 
-void  mm_mul_ps                      (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+inline void  mm_add_ps               (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
-int   mm_movemask_ps                 (float array[NUMBER_POINTS_IN_PACK]);
+inline void  mm_sub_ps               (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+
+inline void  mm_mul_ps               (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
+
+inline int   mm_movemask_ps          (float array[NUMBER_POINTS_IN_PACK]);
 
 #endif
