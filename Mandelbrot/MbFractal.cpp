@@ -131,30 +131,17 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 float X[NUMBER_POINTS_IN_PACK] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
                 float Y[NUMBER_POINTS_IN_PACK] = {Y0, Y0             , Y0                 , Y0                 };
 
-                int    niteration[NUMBER_POINTS_IN_PACK] = {};
+                float niteration[NUMBER_POINTS_IN_PACK] = {};
 
-                float         cmp[NUMBER_POINTS_IN_PACK] = {};
+                float        cmp[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps1  (cmp,          1);
 
-                int niterationmax[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1 ((float*)niterationmax, NITERATIONMAX);
+                float niterationmax[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps1 (niterationmax, NITERATIONMAX);
 
-                int mask = 0;
-
-                for (; ; mm_add_epi32 (niteration, niteration, (int*)cmp))
+                for (; mm_cmple_ps (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
                 {
-                    mm_cmple_ps (cmp, (float*)niteration, (float*)niterationmax);
-
-                    printf ("cmp[0] = %f\n", cmp[0]);
-
-                    mask = mm_movemask (cmp);
-
-                    printf ("mask = %d\n", mask);
-
-                    if (!mask)
-                    {
-                        break;
-                    }
-                    printf ("niteration[0] = %f\n", ((float*)niteration)[0]);
+                    //printf ("niteration = %d\n", (int) niteration[1]);
                     float squared_X[NUMBER_POINTS_IN_PACK] = {};
                     float squared_Y[NUMBER_POINTS_IN_PACK] = {};
                     float       X_Y[NUMBER_POINTS_IN_PACK] = {};
@@ -192,7 +179,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
-                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - niteration[index] * 16), 0, (sf::Uint8)(256 - niteration[index] * 16));
+                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int) niteration[index] * 16), 0, (sf::Uint8)(256 - (int) niteration[index] * 16));
                 }
             }
         }
@@ -200,30 +187,9 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
-int mm_movemask (float array[NUMBER_POINTS_IN_PACK])
-{
-    int dst = 0;
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        if (array[index])
-        {
-            dst |= 1 << index;
-            printf ("array[%d] = %f\n", index, array[index]);
-        }
-    }
-    return dst;
-}
+//pumpumpum
 
-void mm_add_epi32 (int dst[NUMBER_POINTS_IN_PACK], int first_array[NUMBER_POINTS_IN_PACK], int second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        dst[index] = first_array[index] + second_array[index];
-    }
-    return;
-}
-
-void mm_mul_ps    (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
+void mm_mul_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
 {
     for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
     {
@@ -251,22 +217,13 @@ void mm_set_ps1 (float dst[NUMBER_POINTS_IN_PACK], float value)
 }
 
 
-void mm_cmple_ps (float dst[4], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
+bool mm_cmple_ps (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
 {
     for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
     {
-        printf ("first_array[%d] vs second_array[%d]\n", index, index);
-        printf ("%f              vs %f\n", first_array[index], second_array[index]);
-        if (first_array[index] <= second_array[index])
-        {
-            dst[index] = 1;
-        }
-        else
-        {
-            dst[index] = 0;
-        }
+        if (first_array[index] >= second_array[index]) return 0;
     }
-    return;
+    return 1;
 }
 
 void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
