@@ -1,6 +1,8 @@
 #ifndef MANDELBROTFRACTAL_H
 #define MANDELBROTFRACTAL_H
 
+// nav
+
 typedef struct navigation_t
 {
     float offset_y;
