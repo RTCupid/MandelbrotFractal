@@ -1,3 +1,6 @@
 .vscode/
 *.obj
 *.o
+sfml-app
+build/obj/
+build/bin/
