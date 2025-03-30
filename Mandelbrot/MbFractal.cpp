@@ -123,53 +123,55 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            for (int ix = 0; ix < SIZE_SCREEN_X; ix += 4, X0 += 4 * dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
 
-                float X[4] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
-                float Y[4] = {Y0, Y0             , Y0                 , Y0                 };
+                float X[NUMBER_POINTS_IN_PACK] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
+                float Y[NUMBER_POINTS_IN_PACK] = {Y0, Y0             , Y0                 , Y0                 };
 
-                int niteration[4] = {};
-                int        cmp[4] = {1, 1, 1, 1};
+                float niteration[NUMBER_POINTS_IN_PACK] = {};
+                float        cmp[NUMBER_POINTS_IN_PACK] = {1, 1, 1, 1};
 
-                for (; niteration[0] < NITERATIONMAX &&
-                       niteration[1] < NITERATIONMAX &&
-                       niteration[2] < NITERATIONMAX &&
-                       niteration[3] < NITERATIONMAX; niteration[0] += cmp[0],
+                float niterationmax[NUMBER_POINTS_IN_PACK] = {};
+
+                mm_set_ps1 (niterationmax, NITERATIONMAX);
+
+                for (; mm_cmple_ps (niteration, niterationmax); niteration[0] += cmp[0],
                                                       niteration[1] += cmp[1],
                                                       niteration[2] += cmp[2],
                                                       niteration[3] += cmp[3])
                 {
-                    float squared_X[4] = {};
-                    float squared_Y[4] = {};
-                    float       X_Y[4] = {};
-                    float squared_r[4] = {};
+                    //printf ("niteration = %d\n", (int) niteration[1]);
+                    float squared_X[NUMBER_POINTS_IN_PACK] = {};
+                    float squared_Y[NUMBER_POINTS_IN_PACK] = {};
+                    float       X_Y[NUMBER_POINTS_IN_PACK] = {};
+                    float squared_r[NUMBER_POINTS_IN_PACK] = {};
 
                     int index = 0;
 
-                    for (; index < 4; index++)
+                    for (; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         squared_X[index] = X[index] * X[index];
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         squared_Y[index] = Y[index] * Y[index];
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                               X_Y[index] = X[index] * Y[index];
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         squared_r[index] = squared_X[index] + squared_Y[index];
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         if (squared_r[index]  >= SQUARED_R_MAX) cmp[index] = 0;
                     }
@@ -179,26 +181,44 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                         break;
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         X[index] = squared_X[index] - squared_Y[index] + X0 + dx * (float)index * scale;
                     }
 
-                    for (index = 0; index < 4; index++)
+                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
                         Y[index] =       X_Y[index] +       X_Y[index] + Y0;
                     }
                 }
 
-                for (int index = 0; index < 4; index++)
+                for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
-                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - niteration[index] * 16), 0, (sf::Uint8)(256 - niteration[index] * 16));
+                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int) niteration[index] * 16), 0, (sf::Uint8)(256 - (int) niteration[index] * 16));
                 }
             }
         }
     }
     return;
+}
+
+void mm_set_ps1 (float niterationmax[NUMBER_POINTS_IN_PACK], float value)
+{
+    for (int index= 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        niterationmax[index] = value;
+    }
+}
+
+
+bool mm_cmple_ps (float niteration[NUMBER_POINTS_IN_PACK], float niterationmax[NUMBER_POINTS_IN_PACK])
+{
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        if (niteration[index] >= niterationmax[index]) return 0;
+    }
+    return 1;
 }
 
 void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
@@ -227,7 +247,7 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offse
 
                 int niteration = 0;
 
-                for (; niteration < NITERATIONMAX; niteration++)
+                for (; niteration < (int) NITERATIONMAX; niteration++)
                 {
                     float squared_X = X * X;
                     float squared_Y = Y * Y;
