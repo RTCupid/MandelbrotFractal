@@ -41,8 +41,15 @@
 
 ### Progress of work
 
+  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other.
+
   <img src="/img/LoopForFourPoints.png">
   <div align="center"> Fig. 2. Code of Mandelbrot fractal with using loop for four points.</div><br>
 
   <img src="/img/LoopForFourPointsFps.png">
   <div align="center"> Fig. 3. Mandelbrot fractal with using loop for four points. You can see that the fps is higher than in common version. The compilation was performed without using optimization keys</div><br>
+
+  You can compare fps in Figure 3 with fps in Figure 4. Fps when using a 4-point loop is higher than in common code.
+
+   <img src="/img/CommonFpsForCompareWithLoopFourPoints.png">
+  <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed without using optimization keys</div><br>
