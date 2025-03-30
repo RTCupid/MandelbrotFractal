@@ -38,3 +38,11 @@
 ## Conclusion
 
 ## Appendix
+
+### Progress of work
+
+  <img src="/img/LoopForFourPoints.png">
+  <div align="center"> Fig. 2. Code of Mandelbrot fractal with using loop for four points.</div><br>
+
+  <img src="/img/LoopForFourPointsFps.png">
+  <div align="center"> Fig. 3. Mandelbrot fractal with using loop for four points. You can see that the fps is higher than in common version. The compilation was performed without using optimization keys</div><br>
