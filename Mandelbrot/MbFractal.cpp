@@ -160,10 +160,9 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     mm_cmple_ps (cmp, squared_r, squared_r_max);
 
-                    if (cmp[0] == 0 && cmp[1] == 0 && cmp[2] == 0 && cmp[3] == 0)
-                    {
-                        break;
-                    }
+                    int mask = mm_movemask_ps (cmp);
+
+                    if (!mask) break;
 
                     for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
@@ -187,6 +186,18 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
+int mm_movemask_ps (float array[NUMBER_POINTS_IN_PACK])
+{
+    int mask = 0;
+
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        if (array[index]) mask |= 1 << index;
+    }
+
+    return mask;
+}
+
 void mm_cmple_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
 {
     for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
@@ -195,11 +206,6 @@ void mm_cmple_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POI
     }
     return;
 }
-// for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-// {
-//     if (squared_r[index]  >= SQUARED_R_MAX) cmp[index] = 0;
-// }
-
 
 //pumpumpum
 

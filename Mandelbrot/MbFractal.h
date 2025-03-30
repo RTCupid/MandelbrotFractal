@@ -42,4 +42,6 @@ void  mm_sub_ps                      (float dst[NUMBER_POINTS_IN_PACK], float fi
 
 void  mm_mul_ps                      (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
+int   mm_movemask_ps                 (float array[NUMBER_POINTS_IN_PACK]);
+
 #endif
