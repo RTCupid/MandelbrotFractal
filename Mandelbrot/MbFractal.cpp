@@ -128,7 +128,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 assert (ix < SIZE_SCREEN_X);
 
                 float X[4] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
-                float Y[4] = {Y0, Y0,              Y0,                  Y0                 };
+                float Y[4] = {Y0, Y0             , Y0                 , Y0                 };
 
                 int niteration[4] = {};
                 int        cmp[4] = {1, 1, 1, 1};
