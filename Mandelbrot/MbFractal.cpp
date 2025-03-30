@@ -139,7 +139,10 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 float niterationmax[NUMBER_POINTS_IN_PACK] = {};
                 mm_set_ps1 (niterationmax, NITERATIONMAX);
 
-                for (; mm_cmple_ps (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
+                float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps1 (squared_r_max, SQUARED_R_MAX);
+
+                for (; mm_cmple_ps111 (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
                 {
                     //printf ("niteration = %d\n", (int) niteration[1]);
                     float squared_X[NUMBER_POINTS_IN_PACK] = {};
@@ -155,10 +158,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     mm_add_ps (squared_r, squared_X, squared_Y);
 
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        if (squared_r[index]  >= SQUARED_R_MAX) cmp[index] = 0;
-                    }
+                    mm_cmple_ps (cmp, squared_r, squared_r_max);
 
                     if (cmp[0] == 0 && cmp[1] == 0 && cmp[2] == 0 && cmp[3] == 0)
                     {
@@ -187,6 +187,20 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
+void mm_cmple_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
+{
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        if (first_array[index]  >= second_array[index]) dst[index] = 0;
+    }
+    return;
+}
+// for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+// {
+//     if (squared_r[index]  >= SQUARED_R_MAX) cmp[index] = 0;
+// }
+
+
 //pumpumpum
 
 void mm_mul_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
@@ -207,6 +221,15 @@ void mm_add_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINT
     return;
 }
 
+void mm_sub_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
+{
+    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+    {
+        dst[index] = first_array[index] - second_array[index];
+    }
+    return;
+}
+
 void mm_set_ps1 (float dst[NUMBER_POINTS_IN_PACK], float value)
 {
     for (int index= 0; index < NUMBER_POINTS_IN_PACK; index++)
@@ -217,7 +240,7 @@ void mm_set_ps1 (float dst[NUMBER_POINTS_IN_PACK], float value)
 }
 
 
-bool mm_cmple_ps (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
+bool mm_cmple_ps111 (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
 {
     for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
     {
