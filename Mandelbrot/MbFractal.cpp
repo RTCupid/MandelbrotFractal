@@ -132,6 +132,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 //     float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
 //     mm_set_ps1 (squared_r_max, SQUARED_R_MAX);
 
+    float niterationmax[NUMBER_POINTS_IN_PACK] = {};
+    mm_set_ps1  (niterationmax, NITERATIONMAX);
+
+    float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
+    mm_set_ps1  (squared_r_max, SQUARED_R_MAX);
+
     //PrintArray (array_dx_scale_npip);
 
     for (int itest = 0; itest < ntimes; itest++)
@@ -169,22 +175,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 float        cmp[NUMBER_POINTS_IN_PACK] = {};
                 mm_set_ps1  (cmp,          1);
 
-                float niterationmax[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1  (niterationmax, NITERATIONMAX);
-
-                float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1  (squared_r_max, SQUARED_R_MAX);
-
                 for (; mm_cmple_ps111 (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
                 {
-                    //PrintArray (cmp);
-
                     float squared_X[NUMBER_POINTS_IN_PACK] = {};
                     float squared_Y[NUMBER_POINTS_IN_PACK] = {};
                     float       X_Y[NUMBER_POINTS_IN_PACK] = {};
                     float squared_r[NUMBER_POINTS_IN_PACK] = {};
-
-                    //int index = 0;
 
                     mm_mul_ps (squared_X, X, X);
                     mm_mul_ps (squared_Y, Y, Y);
@@ -194,7 +190,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     mm_cmple_ps (cmp, squared_r, squared_r_max);
 
-
                     int mask = mm_movemask_ps (cmp);
 
                     if (!mask) break;
@@ -203,27 +198,8 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     mm_add_ps (X, X        , array_X0);
                     mm_add_ps (X, X        , array_dx_scale_index);
 
-                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    // {
-                    //     X[index] += dx * (float)index * scale;
-                    // }
-
-                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    // {
-                    //     X[index] = squared_X[index] - squared_Y[index] + X0 + dx * (float)index * scale;
-                    // }
                     mm_add_ps (Y, X_Y, X_Y);
                     mm_add_ps (Y,   Y, array_Y0);
-
-                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    // {
-                    //     Y[index] += Y0;
-                    // }
-
-                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    // {
-                    //     Y[index] =       X_Y[index] +       X_Y[index] + Y0;
-                    // }
                 }
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
