@@ -197,11 +197,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     mm_sub_ps (X, squared_X, squared_Y);
                     mm_add_ps (X, X        , array_X0);
+                    mm_add_ps (X, X        , array_dx_scale_index);
 
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        X[index] += dx * (float)index * scale;
-                    }
+                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+                    // {
+                    //     X[index] += dx * (float)index * scale;
+                    // }
 
                     // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     // {
