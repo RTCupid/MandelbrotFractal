@@ -13,15 +13,17 @@ typedef struct navigation_t
 
 const int NUMBER_POINTS_IN_PACK = 4;
 
-const float NITERATIONMAX       = 256;
+const float    NITERATIONMAX    = 256;
 
-const float SQUARED_R_MAX       = 10 * 10;
+const float    SQUARED_R_MAX    = 10 * 10;
 
-const int   FACTOR_D            = 400;
+const int      FACTOR_D         = 400;
 
-const int   SIZE_SCREEN_X       = 1200;
+const int      SIZE_SCREEN_X    = 1200;
 
-const int   SIZE_SCREEN_Y       = 800;
+const int      SIZE_SCREEN_Y    = 800;
+
+const uint32_t MASK_FFFFFFFF    = 4294967295;
 
 int   RunMandelbrotFractal           (char* mode, int ntimes = 1);
 
@@ -35,7 +37,7 @@ void  SetArrayIndex                  (float array_index[NUMBER_POINTS_IN_PACK]);
 
 void  PrintArray                     (float array[NUMBER_POINTS_IN_PACK]);
 
-void  MyIncIter                      (__m128 niteration, __m128 cmp);
+void  MyIncIter                      (__m128* niteration, __m128* cmp);
 
 inline bool  mm_cmple_ps111          (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 

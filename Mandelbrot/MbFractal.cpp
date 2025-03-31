@@ -149,7 +149,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 __m128 cmp        = _mm_set_ps1 (1);
 
-                for (;; MyIncIter (niteration, cmp))
+                for (;; MyIncIter (&niteration, &cmp))
                 {
                     __m128 cmpitrtn = _mm_cmple_ps (niterationmax, niteration);
 
@@ -177,12 +177,9 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y = _mm_add_ps (Y, array_Y0);
                 }
 
-                alignas(16) float number_iteration_float[4] = {};
+                alignas (16) float number_iteration_float[4] = {};
 
                 _mm_store_ps (number_iteration_float, niteration);
-
-                printf ("number_iteration_float: %f, %f, %f, %f\n",
-                        number_iteration_float[0], number_iteration_float[1], number_iteration_float[2], number_iteration_float[3]);
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
@@ -197,16 +194,28 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
-void MyIncIter (__m128 niteration, __m128 cmp)
+void MyIncIter (__m128* niteration, __m128* cmp)
 {
     //_mm_add_ps (niteration, cmp);
 
-    alignas(16) float cmp_float[4] = {};
+    uint32_t mask2[4];
+    _mm_store_ps ((float*)mask2, *cmp);
 
-    _mm_store_ps (cmp_float, niteration);
+    alignas (16) float new_cmp[4] = {};
 
-    printf ("cmp_float: %f, %f, %f, %f\n",
-            cmp_float[0], cmp_float[1], cmp_float[2], cmp_float[3]);
+    for (int index = 0; index < 4; index++)
+    {
+        if (mask2[index] == MASK_FFFFFFFF)
+        {
+            new_cmp[index] = 1;
+        }
+    }
+
+    *cmp        = _mm_load_ps (new_cmp);
+
+    *niteration = _mm_add_ps (*niteration, *cmp);
+
+    return;
 }
 
 void PrintArray (float array[NUMBER_POINTS_IN_PACK])
