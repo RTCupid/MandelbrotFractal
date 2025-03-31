@@ -145,16 +145,20 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
+            float array_X0[NUMBER_POINTS_IN_PACK] = {};
 
             for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
 
+                mm_set_ps1 (array_X0, X0);
+                PrintArray (array_X0);
+
                 float X[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps (X, X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
+                mm_set_ps  (X, X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
                 float Y[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps (Y, Y0, Y0             , Y0                 , Y0                 );
+                mm_set_ps  (Y, Y0, Y0             , Y0                 , Y0                 );
 
                 float niteration[NUMBER_POINTS_IN_PACK] = {};
 
@@ -162,10 +166,10 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 mm_set_ps1  (cmp,          1);
 
                 float niterationmax[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1 (niterationmax, NITERATIONMAX);
+                mm_set_ps1  (niterationmax, NITERATIONMAX);
 
                 float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1 (squared_r_max, SQUARED_R_MAX);
+                mm_set_ps1  (squared_r_max, SQUARED_R_MAX);
 
                 for (; mm_cmple_ps111 (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
                 {
