@@ -149,11 +149,11 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 __m128 cmp        = _mm_set_ps1 (1);
 
-                for (;; MyIncIter (&niteration, &cmp))
+                for (;; MyIncIter (&niteration, cmp))
                 {
                     __m128 cmpitrtn = _mm_cmple_ps (niterationmax, niteration);
 
-                    int mask        = _mm_movemask_ps (cmpitrtn);
+                    int    mask     = _mm_movemask_ps (cmpitrtn);
 
                     if (mask) break;
 
@@ -163,7 +163,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
 
-                    cmp = _mm_cmple_ps (squared_r, squared_r_max);
+                    cmp  = _mm_cmple_ps (squared_r, squared_r_max);
 
                     mask = _mm_movemask_ps (cmp);
 
@@ -194,12 +194,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
-void MyIncIter (__m128* niteration, __m128* cmp)
+void MyIncIter (__m128* niteration, __m128 cmp)
 {
     //_mm_add_ps (niteration, cmp);
 
-    uint32_t mask2[4];
-    _mm_store_ps ((float*)mask2, *cmp);
+    alignas (16) uint32_t mask2[4] = {};
+    _mm_store_ps ((float*)mask2, cmp);
 
     alignas (16) float new_cmp[4] = {};
 
@@ -211,9 +211,9 @@ void MyIncIter (__m128* niteration, __m128* cmp)
         }
     }
 
-    *cmp        = _mm_load_ps (new_cmp);
+    __m128 cmp_m128 = _mm_load_ps (new_cmp);
 
-    *niteration = _mm_add_ps (*niteration, *cmp);
+    *niteration     = _mm_add_ps (*niteration, cmp_m128);
 
     return;
 }
