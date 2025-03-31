@@ -145,6 +145,10 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
+
+            float array_Y0[NUMBER_POINTS_IN_PACK] = {};
+            mm_set_ps1 (array_Y0, Y0);
+
             float array_X0[NUMBER_POINTS_IN_PACK] = {};
 
             for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
@@ -180,7 +184,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     float       X_Y[NUMBER_POINTS_IN_PACK] = {};
                     float squared_r[NUMBER_POINTS_IN_PACK] = {};
 
-                    int index = 0;
+                    //int index = 0;
 
                     mm_mul_ps (squared_X, X, X);
                     mm_mul_ps (squared_Y, Y, Y);
@@ -209,11 +213,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     //     X[index] = squared_X[index] - squared_Y[index] + X0 + dx * (float)index * scale;
                     // }
                     mm_add_ps (Y, X_Y, X_Y);
+                    mm_add_ps (Y,   Y, array_Y0);
 
-                    for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-                    {
-                        Y[index] += Y0;
-                    }
+                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+                    // {
+                    //     Y[index] += Y0;
+                    // }
 
                     // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     // {
