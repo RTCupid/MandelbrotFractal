@@ -151,8 +151,10 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
 
-                float X[NUMBER_POINTS_IN_PACK] = {X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale};
-                float Y[NUMBER_POINTS_IN_PACK] = {Y0, Y0             , Y0                 , Y0                 };
+                float X[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps (X, X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
+                float Y[NUMBER_POINTS_IN_PACK] = {};
+                mm_set_ps (Y, Y0, Y0             , Y0                 , Y0                 );
 
                 float niteration[NUMBER_POINTS_IN_PACK] = {};
 

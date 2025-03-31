@@ -40,6 +40,8 @@ inline void  mm_cmple_ps             (float dst[NUMBER_POINTS_IN_PACK], float fi
 
 inline void  mm_set_ps1              (float dst[NUMBER_POINTS_IN_PACK], float value);
 
+inline void  mm_set_ps               (float dst[NUMBER_POINTS_IN_PACK], float par1, float par2, float par3, float par4);
+
 inline void  mm_add_ps               (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
 inline void  mm_sub_ps               (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
