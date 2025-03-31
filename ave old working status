@@ -1,0 +1,48 @@
+[33m2d93762[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Error algoritm, need to debug, I can't find error, because it look like correctly, but I need find this error, incorrect graphucs output
+[33m155b6f0[m + normal func mm_movemask_ps
+[33mfb79280[m + normal func mm_cmple_ps
+[33m08ca76d[m save old working status
+[33m5b09384[m error version, I can't understand what of type I should use for cmp[4] because it is used as float and int in some places in my func
+[33m7b958d9[m + func mm_mul_ps, start to write mm_add_epi32
+[33m3f77398[m + func mm_add_ps to add arrays of some float numbers
+[33mc56d101[m + first two func for some cycles, prototype of intrinsics
+[33m92787c2[m + first two func for some cycles, prototype of intrinsics
+[33m54266f6[m + check optimization key, and + many cycles for operation with 4-packed points
+[33m5797aaa[m Update README.md
+[33m0aea6a7[m + png common FPS for compare with  loop for four points in README + update .gitignore
+[33ma44293c[m + png common FPS for compare with  loop for four points in README
+[33mbe345e7[m + Progress work in README.md
+[33m45ef66f[m + png for README about loop for four points
+[33mfa582bd[m + working optimization using calculate four points each loop
+[33m75d73f0[m + working optimization using calculate four points each loop
+[33m73a0ecb[m may be + optimization with loop about four points, but I don't understand what is happen
+[33m27beb20[m start of optimizations
+[33maa6bd61[m + other constants for size of screen x and y
+[33ma139ae6[m + loop with ntests, + const int FACTOR_D for dx and dy
+[33meae53f5[m start to make ntests loop
+[33m7f1bbcb[m Update .gitignore
+[33mb5e129c[m + two functions for calculate mandelbrot: common and intrinsics (don't correct now), and + Measuring file to find values of time
+[33m4554ba2[m new version of modes
+[33m66688fa[m + changes from main and .h
+[33mad898fe[m + func for navigation in MbFractal.cpp
+[33mdf1eab3[m Update README.md
+[33m036ce08[m Update README.md
+[33m83bc2d8[m new version of png
+[33mb92454a[m delete graphics mode, now it have only ntests cmd line's argument
+[33m6c92b5b[m + img/~.png for README
+[33mba41561[m + img/~.png for README
+[33m55b159e[m put new png to README.md
+[33m239cfb2[m Start to describe the results in README.md
+[33m63d71e6[m Update README.md
+[33mca7f9a6[m + offset and zoom
+[33md717647[m + nice colors, start to make zoom and offset
+[33m39704d6[m + simple counter of fps and time
+[33m5260e86[m + put of cmd args (argc and argv) to find mode: tests (with repeating calculateabout some times) or graphics
+[33med28a8d[m + new part of fractal is saw
+[33m7cdd087[m + working counter of fps
+[33m3ab589a[m start some visual corrections
+[33m9dddda1[m first version with graphics of Mandelbrot fractal
+[33m1a4107b[m + func RunMandelbrotFractal for calculate fractal
+[33m5ecd929[m work with sfml and calculate base of Mandelbrot fractal
+[33mb9d0b08[m Create README.md
+[33m6f12902[m working lib sfml
