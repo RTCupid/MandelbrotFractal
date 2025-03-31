@@ -180,16 +180,10 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     mm_mul_ps (squared_Y, Y, Y);
                     mm_mul_ps (      X_Y, X, Y);
 
-                    //printf ("niteration    | ");
-                    //PrintArray (niteration);
                     mm_add_ps (squared_r, squared_X, squared_Y);
-                    //printf ("squared_r     | ");
-                    //PrintArray (squared_r);
-                    //printf ("squared_r_max | ");
-                    //PrintArray (squared_r_max);
+
                     mm_cmple_ps (cmp, squared_r, squared_r_max);
-                    //printf ("cmp           | ");
-                    //PrintArray (cmp);
+
 
                     int mask = mm_movemask_ps (cmp);
 
@@ -265,10 +259,6 @@ inline void mm_cmple_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUM
         {
             dst[index] = 0;
         }
-        // else
-        // {
-        //     dst[index] = 1;
-        // }
     }
     return;
 }
