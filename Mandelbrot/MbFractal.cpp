@@ -111,17 +111,17 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 {
     float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
 
-//     float array_index[NUMBER_POINTS_IN_PACK] = {};
-//     SetArrayIndex (array_index);
-//
-//     float array_dx_scale[NUMBER_POINTS_IN_PACK]  = {};
-//     mm_set_ps1 (array_dx_scale, dx * scale);
-//
-//     //printf ("dx = %f |  ", dx);
-//     //PrintArray (array_dx_scale);
-//
-//     float array_dx_scale_index[NUMBER_POINTS_IN_PACK]  = {};
-//     mm_mul_ps  (array_dx_scale_index, array_dx_scale, array_index);
+    float array_index[NUMBER_POINTS_IN_PACK] = {};
+    SetArrayIndex (array_index);
+
+    float array_dx_scale[NUMBER_POINTS_IN_PACK]  = {};
+    mm_set_ps1 (array_dx_scale, dx * scale);
+
+    //printf ("dx = %f |  ", dx);
+    //PrintArray (array_dx_scale);
+
+    float array_dx_scale_index[NUMBER_POINTS_IN_PACK]  = {};
+    mm_mul_ps  (array_dx_scale_index, array_dx_scale, array_index);
 //
 //     float array_dx_scale_npip[NUMBER_POINTS_IN_PACK] = {};
 //     mm_set_ps1 (array_dx_scale_npip, dx * scale * NUMBER_POINTS_IN_PACK);
@@ -153,7 +153,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 assert (ix < SIZE_SCREEN_X);
 
                 mm_set_ps1 (array_X0, X0);
-                PrintArray (array_X0);
+                //PrintArray (array_X0);
 
                 float X[NUMBER_POINTS_IN_PACK] = {};
                 mm_set_ps  (X, X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
@@ -195,10 +195,17 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     if (!mask) break;
 
+                    mm_sub_ps (X, squared_X, squared_Y);
+
                     for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
-                        X[index] = squared_X[index] - squared_Y[index] + X0 + dx * (float)index * scale;
+                        X[index] += X0 + dx * (float)index * scale;
                     }
+
+                    // for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
+                    // {
+                    //     X[index] = squared_X[index] - squared_Y[index] + X0 + dx * (float)index * scale;
+                    // }
 
                     for (index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                     {
