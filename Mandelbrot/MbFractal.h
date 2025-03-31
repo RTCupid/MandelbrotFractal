@@ -1,6 +1,7 @@
 #ifndef MANDELBROTFRACTAL_H
 #define MANDELBROTFRACTAL_H
 
+#include <xmmintrin.h>
 // nav
 
 typedef struct navigation_t
@@ -33,6 +34,8 @@ void  IntrinsicsCalculateMandelbrot  (sf::VertexArray* points, int ntimes, float
 void  SetArrayIndex                  (float array_index[NUMBER_POINTS_IN_PACK]);
 
 void  PrintArray                     (float array[NUMBER_POINTS_IN_PACK]);
+
+void  MyIncIter                      (__m128 niteration, __m128 cmp);
 
 inline bool  mm_cmple_ps111          (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 

@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <SFML/Graphics.hpp>
+#include <xmmintrin.h>
+#include <immintrin.h>
 
 #include "MbFractal.h"
 #include "../common/colors.h"
@@ -111,20 +113,15 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 {
     float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
 
-    float array_index[NUMBER_POINTS_IN_PACK] = {};
-    SetArrayIndex (array_index);
+    __m128 array_index          = _mm_set_ps (0, 1, 2, 3);
 
-    float array_dx_scale[NUMBER_POINTS_IN_PACK]  = {};
-    mm_set_ps1 (array_dx_scale, dx * scale);
+    __m128 array_dx_scale       = _mm_set_ps1 (dx * scale);
 
-    float array_dx_scale_index[NUMBER_POINTS_IN_PACK]  = {};
-    mm_mul_ps  (array_dx_scale_index, array_dx_scale, array_index);
+    __m128 array_dx_scale_index = _mm_mul_ps  (array_dx_scale, (__m128) array_index);
 
-    float niterationmax[NUMBER_POINTS_IN_PACK] = {};
-    mm_set_ps1  (niterationmax, NITERATIONMAX);
+    __m128 niterationmax        = _mm_set_ps1  (NITERATIONMAX);
 
-    float squared_r_max[NUMBER_POINTS_IN_PACK] = {};
-    mm_set_ps1  (squared_r_max, SQUARED_R_MAX);
+    __m128 squared_r_max        = _mm_set_ps1  (SQUARED_R_MAX);
 
     for (int itest = 0; itest < ntimes; itest++)
     {
@@ -137,65 +134,79 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
             float Y0 =  1 + offset_y - (float)iy * dy * scale;
 
-            float array_Y0[NUMBER_POINTS_IN_PACK] = {};
-            mm_set_ps1 (array_Y0, Y0);
-
-            float array_X0[NUMBER_POINTS_IN_PACK] = {};
+            __m128 array_Y0 = _mm_set_ps1 (Y0);
 
             for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
             {
                 assert (ix < SIZE_SCREEN_X);
 
-                mm_set_ps1 (array_X0, X0);
+                __m128 array_X0 = _mm_set_ps1 (X0);
 
-                float X[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps  (X, X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
-                float Y[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps  (Y, Y0, Y0             , Y0                 , Y0                 );
+                __m128 X = _mm_set_ps (X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
+                __m128 Y = _mm_set_ps (Y0, Y0             , Y0                 , Y0                 );
 
-                float niteration[NUMBER_POINTS_IN_PACK] = {};
+                __m128 niteration = _mm_set_ps1 (0);
 
-                float        cmp[NUMBER_POINTS_IN_PACK] = {};
-                mm_set_ps1  (cmp,          1);
+                __m128 cmp        = _mm_set_ps1 (1);
 
-                for (; mm_cmple_ps111 (niteration, niterationmax); mm_add_ps (niteration, niteration, cmp))
+                for (;; MyIncIter (niteration, cmp))
                 {
-                    float squared_X[NUMBER_POINTS_IN_PACK] = {};
-                    float squared_Y[NUMBER_POINTS_IN_PACK] = {};
-                    float       X_Y[NUMBER_POINTS_IN_PACK] = {};
-                    float squared_r[NUMBER_POINTS_IN_PACK] = {};
+                    __m128 cmpitrtn = _mm_cmple_ps (niterationmax, niteration);
 
-                    mm_mul_ps (squared_X, X, X);
-                    mm_mul_ps (squared_Y, Y, Y);
-                    mm_mul_ps (      X_Y, X, Y);
+                    int mask        = _mm_movemask_ps (cmpitrtn);
 
-                    mm_add_ps (squared_r, squared_X, squared_Y);
+                    if (mask) break;
 
-                    mm_cmple_ps (cmp, squared_r, squared_r_max);
+                    __m128 squared_X = _mm_mul_ps (X, X);
+                    __m128 squared_Y = _mm_mul_ps (Y, Y);
+                    __m128       X_Y = _mm_mul_ps (X, Y);
 
-                    int mask = mm_movemask_ps (cmp);
+                    __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
+
+                    cmp = _mm_cmple_ps (squared_r, squared_r_max);
+
+                    mask = _mm_movemask_ps (cmp);
 
                     if (!mask) break;
 
-                    mm_sub_ps (X, squared_X, squared_Y);
-                    mm_add_ps (X, X        , array_X0);
-                    mm_add_ps (X, X        , array_dx_scale_index);
+                    X = _mm_sub_ps (squared_X, squared_Y);
+                    X = _mm_add_ps (X        , array_X0);
+                    X = _mm_add_ps (X        , array_dx_scale_index);
 
-                    mm_add_ps (Y, X_Y, X_Y);
-                    mm_add_ps (Y,   Y, array_Y0);
+                    Y = _mm_add_ps (X_Y, X_Y);
+                    Y = _mm_add_ps (Y, array_Y0);
                 }
+
+                alignas(16) float number_iteration_float[4] = {};
+
+                _mm_store_ps (number_iteration_float, niteration);
+
+                printf ("number_iteration_float: %f, %f, %f, %f\n",
+                        number_iteration_float[0], number_iteration_float[1], number_iteration_float[2], number_iteration_float[3]);
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
                     assert (index < NUMBER_POINTS_IN_PACK);
 
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
-                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int) niteration[index] * 16), 0, (sf::Uint8)(256 - (int) niteration[index] * 16));
+                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int)number_iteration_float[index] * 16), 0, (sf::Uint8)(256 - (int)number_iteration_float[index] * 16));
                 }
             }
         }
     }
     return;
+}
+
+void MyIncIter (__m128 niteration, __m128 cmp)
+{
+    //_mm_add_ps (niteration, cmp);
+
+    alignas(16) float cmp_float[4] = {};
+
+    _mm_store_ps (cmp_float, niteration);
+
+    printf ("cmp_float: %f, %f, %f, %f\n",
+            cmp_float[0], cmp_float[1], cmp_float[2], cmp_float[3]);
 }
 
 void PrintArray (float array[NUMBER_POINTS_IN_PACK])
