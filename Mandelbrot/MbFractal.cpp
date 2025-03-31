@@ -132,7 +132,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
         for (int iy = 0; iy < SIZE_SCREEN_Y; iy++)
         {
-            //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
             assert (iy < SIZE_SCREEN_Y);
 
             float X0 = -2 + offset_x ;                                      //; start from upper left cornel
@@ -145,7 +144,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
             for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
             {
-                //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
 
                 mm_set_ps1 (array_X0, X0);
@@ -189,6 +187,8 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
+                    assert (index < NUMBER_POINTS_IN_PACK);
+
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int) niteration[index] * 16), 0, (sf::Uint8)(256 - (int) niteration[index] * 16));
                 }
