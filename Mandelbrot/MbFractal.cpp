@@ -74,7 +74,7 @@ int RunMandelbrotFractal (char* mode, int ntimes)
         {
             float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
 
-            const __m128 array_index          = _mm_set_ps   (0, 1, 2, 3);
+            const __m128 array_index          = _mm_set_ps   (3.0f, 2.0f, 1.0f, 0.0f);
 
             const __m128 array_dx_scale       = _mm_set_ps1  (dx * nvg.scale);
 
@@ -182,9 +182,9 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y = _mm_add_ps (X_Y, X_Y);
                     Y = _mm_add_ps (Y, array_Y0);
 
-                    const __m128 one = _mm_set_ps1(1.0f);
+                    //const __m128 one = ;
 
-                    cmp = _mm_and_ps(cmp, one);
+                    cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
                 }
 
                 alignas (16) float number_iteration_float[4] = {};
