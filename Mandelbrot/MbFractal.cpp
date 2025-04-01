@@ -159,9 +159,9 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 for (;; niteration = _mm_add_ps (niteration, cmp))
                 {
-                    __m128 cmpitrtn = _mm_cmple_ps (niterationmax, niteration);
+                    cmp = _mm_cmple_ps (niterationmax, niteration);
 
-                    int    mask     = _mm_movemask_ps (cmpitrtn);
+                    int    mask     = _mm_movemask_ps (cmp);
 
                     if (mask) break;
 
