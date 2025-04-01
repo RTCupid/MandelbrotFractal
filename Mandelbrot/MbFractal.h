@@ -38,8 +38,6 @@ void  SetArrayIndex                  (float array_index[NUMBER_POINTS_IN_PACK]);
 
 void  PrintArray                     (float array[NUMBER_POINTS_IN_PACK]);
 
-void  MyIncIter                      (__m128* niteration, __m128 cmp);
-
 inline bool  mm_cmple_ps111          (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);
 
 inline void  mm_cmple_ps             (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK]);

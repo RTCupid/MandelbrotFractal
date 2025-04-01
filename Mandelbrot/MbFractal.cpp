@@ -187,29 +187,11 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     const __m128 one = _mm_set1_ps(1.0f); // или _mm_set_ps1(1.0f)
 
                     cmp = _mm_and_ps(cmp, one);
-
-//                      alignas (16) float debug_cmp[4] = {};
-//                     _mm_store_ps (debug_cmp, cmp);
-//
-//                     printf (YEL "after loop cmp: cmp[0] = %f, cmp[1] = %f, cmp[2] = %f, cmp[3] = %f\n" RESET,
-//                                        debug_cmp[0], debug_cmp[1], debug_cmp[2], debug_cmp[3]);
-
-//                     alignas (16) float debug_niteration[4] = {};
-//                     _mm_store_ps (debug_niteration, niteration);
-//
-//                     printf (GRN "after loop nit: nit[0] = %f, nit[1] = %f, nit[2] = %f, nit[3] = %f\n" RESET,
-//                                        debug_niteration[0], debug_niteration[1], debug_niteration[2], debug_niteration[3]);
                 }
 
                 alignas (16) float number_iteration_float[4] = {};
 
                 _mm_store_ps (number_iteration_float, niteration);
-
-//                 alignas (16) float debug_niteration[4] = {};
-//                 _mm_store_ps (debug_niteration, niteration);
-//
-//                  printf (GRN "after loop nit: nit[0] = %f, nit[1] = %f, nit[2] = %f, nit[3] = %f\n" RESET,
-//                                        debug_niteration[0], debug_niteration[1], debug_niteration[2], debug_niteration[3]);
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
@@ -224,29 +206,11 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     return;
 }
 
-void MyIncIter (__m128* niteration, __m128 cmp)
-{
-    //_mm_add_ps (niteration, cmp);
-
-    alignas (16) uint32_t mask2[4] = {};
-    _mm_store_ps ((float*)mask2, cmp);
-
-    alignas (16) float new_cmp[4] = {};
-
-    for (int index = 0; index < 4; index++)
-    {
-        if (mask2[index] == MASK_FFFFFFFF)
-        {
-            new_cmp[index] = 1;
-        }
-    }
-
-    __m128 cmp_m128 = _mm_load_ps (new_cmp);
-
-    *niteration     = _mm_add_ps (*niteration, cmp_m128);
-
-    return;
-}
+//                 alignas (16) float debug_niteration[4] = {};
+//                 _mm_store_ps (debug_niteration, niteration);
+//
+//                  printf (GRN "after loop nit: nit[0] = %f, nit[1] = %f, nit[2] = %f, nit[3] = %f\n" RESET,
+//                                        debug_niteration[0], debug_niteration[1], debug_niteration[2], debug_niteration[3]);
 
 void PrintArray (float array[NUMBER_POINTS_IN_PACK])
 {
