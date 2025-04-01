@@ -78,15 +78,13 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
             const __m128 array_dx_scale       = _mm_set_ps1  (dx * nvg.scale);
 
-            const __m128 array_dx_scale_index = _mm_mul_ps   (array_dx_scale, (__m128) array_index);
+            const __m128 array_dx_scale_index = _mm_mul_ps   (array_dx_scale, array_index);
 
             const __m128 niterationmax        = _mm_set_ps1  (NITERATIONMAX);
 
             const __m128 squared_r_max        = _mm_set_ps1  (SQUARED_R_MAX);
 
-            const __m128 mask_ffffffff        = _mm_set_ps1  (MASK_FFFFFFFF);
-
-            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy, niterationmax, squared_r_max, array_dx_scale_index, mask_ffffffff);
+            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy, niterationmax, squared_r_max, array_dx_scale_index);
         }
         else
         {
@@ -129,7 +127,7 @@ void Navigation (navigation_t* nvg)
 }
 
 void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy,
-                                                                __m128 niterationmax, __m128 squared_r_max, __m128 array_dx_scale_index, __m128 mask_ffffffff)
+                                                                __m128 niterationmax, __m128 squared_r_max, __m128 array_dx_scale_index)
 {
     for (int itest = 0; itest < ntimes; itest++)
     {
@@ -150,8 +148,8 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 __m128 array_X0 = _mm_set_ps1 (X0);
 
-                __m128 X = _mm_set_ps (X0, X0 + dx * scale, X0 + 2 * dx * scale, X0 + 3 * dx * scale);
-                __m128 Y = _mm_set_ps (Y0, Y0             , Y0                 , Y0                 );
+                __m128 X = _mm_add_ps  (array_X0, array_dx_scale_index);
+                __m128 Y = _mm_set_ps1 (Y0);
 
                 __m128 niteration = _mm_set_ps1 (0);
 
@@ -161,7 +159,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                 {
                     cmp = _mm_cmple_ps (niterationmax, niteration);
 
-                    int    mask     = _mm_movemask_ps (cmp);
+                    int    mask      = _mm_movemask_ps (cmp);
 
                     if (mask) break;
 
@@ -184,7 +182,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y = _mm_add_ps (X_Y, X_Y);
                     Y = _mm_add_ps (Y, array_Y0);
 
-                    const __m128 one = _mm_set1_ps(1.0f); // или _mm_set_ps1(1.0f)
+                    const __m128 one = _mm_set_ps1(1.0f);
 
                     cmp = _mm_and_ps(cmp, one);
                 }
@@ -198,7 +196,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     assert (index < NUMBER_POINTS_IN_PACK);
 
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
-                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - (int)number_iteration_float[index] * 16), 0, (sf::Uint8)(256 - (int)number_iteration_float[index] * 16));
+                    (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - ((int)number_iteration_float[index]) * 16), 0, (sf::Uint8)(256 - ((int)number_iteration_float[index]) * 16));
                 }
             }
         }
