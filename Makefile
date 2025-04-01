@@ -1,5 +1,5 @@
 CC = g++
-LINUXFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ \
+LINUXFLAGSDEBUG = -D _DEBUG -ggdb3 -O0 -std=c++17 -Wall -Wextra -Weffc++ \
 	-Waggressive-loop-optimizations -Wc++14-compat -Wmissing-declarations \
 	-Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion \
 	-Wctor-dtor-privacy -Wempty-body -Wformat-nonliteral -Wformat-security \
@@ -14,18 +14,21 @@ LINUXFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ \
 	nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,$\
 	signed-integer-overflow,undefined,unreachable,vla-bound,vptr -mavx2
 
+LINUXFLAGRELIZE = -O2 -std=c++17 -Wall -Wextra -march=native -mavx2 -ggdb3
+
+
 BIN_DIR = ./build/bin
 
 OBJ_DIR = ./build/obj
 
 ./sfml-app: $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o
-	$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGS)
+	$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGSRELIZE)
 
 $(OBJ_DIR)/main.o: main.cpp Mandelbrot/MbFractal.h
-	$(CC) -c main.cpp -o $(OBJ_DIR)/main.o $(LINUXFLAGS)
+	$(CC) -c main.cpp -o $(OBJ_DIR)/main.o $(LINUXFLAGSRELIZE)
 
 $(OBJ_DIR)/MbFractal.o: Mandelbrot/MbFractal.cpp Mandelbrot/MbFractal.h
-	$(CC) -c Mandelbrot/MbFractal.cpp -o $(OBJ_DIR)/MbFractal.o $(LINUXFLAGS)
+	$(CC) -c Mandelbrot/MbFractal.cpp -o $(OBJ_DIR)/MbFractal.o $(LINUXFLAGSRELIZE)
 
 clean:
 	rm -f main $(OBJ_DIR)/*.o

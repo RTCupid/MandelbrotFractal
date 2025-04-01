@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <xmmintrin.h>
 #include <immintrin.h>
+#include <emmintrin.h>
+#include <smmintrin.h>
 
 #include "MbFractal.h"
 #include "../common/colors.h"
@@ -45,6 +47,7 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
     fprintf (Measuring_FILE, "Time of frame (seconds):\n");
 
+
     while (window.isOpen ())
     {
         sf::Event event;
@@ -63,11 +66,27 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         if      (strcmp (mode, "common") == 0)
         {
-            CommonCalculateMandelbrot     (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale);
+            float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
+
+            CommonCalculateMandelbrot     (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy);
         }
         else if (strcmp (mode, "intrinsics") == 0)
         {
-            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale);
+            float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
+
+            __m128 array_index          = _mm_set_ps   (0, 1, 2, 3);
+
+            __m128 array_dx_scale       = _mm_set_ps1  (dx * nvg.scale);
+
+            __m128 array_dx_scale_index = _mm_mul_ps   (array_dx_scale, (__m128) array_index);
+
+            __m128 niterationmax        = _mm_set_ps1  (NITERATIONMAX);
+
+            __m128 squared_r_max        = _mm_set_ps1  (SQUARED_R_MAX);
+
+            __m128 mask_ffffffff        = _mm_set_ps1  (MASK_FFFFFFFF);
+
+            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy, niterationmax, squared_r_max, array_dx_scale_index, mask_ffffffff);
         }
         else
         {
@@ -109,20 +128,9 @@ void Navigation (navigation_t* nvg)
     return;
 }
 
-void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
+void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy,
+                                                                __m128 niterationmax, __m128 squared_r_max, __m128 array_dx_scale_index, __m128 mask_ffffffff)
 {
-    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
-
-    __m128 array_index          = _mm_set_ps (0, 1, 2, 3);
-
-    __m128 array_dx_scale       = _mm_set_ps1 (dx * scale);
-
-    __m128 array_dx_scale_index = _mm_mul_ps  (array_dx_scale, (__m128) array_index);
-
-    __m128 niterationmax        = _mm_set_ps1  (NITERATIONMAX);
-
-    __m128 squared_r_max        = _mm_set_ps1  (SQUARED_R_MAX);
-
     for (int itest = 0; itest < ntimes; itest++)
     {
         assert (itest < ntimes);
@@ -149,7 +157,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 __m128 cmp        = _mm_set_ps1 (1);
 
-                for (;; MyIncIter (&niteration, cmp))
+                for (;; niteration = _mm_add_ps (niteration, cmp))
                 {
                     __m128 cmpitrtn = _mm_cmple_ps (niterationmax, niteration);
 
@@ -175,6 +183,21 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                     Y = _mm_add_ps (X_Y, X_Y);
                     Y = _mm_add_ps (Y, array_Y0);
+
+//                     alignas (16) float debug_cmp[4] = {};
+//                     _mm_store_ps (debug_cmp, cmp);
+//
+//                     printf (YEL "before change cmp: cmp[0] = %f, cmp[1] = %f, cmp[2] = %f, cmp[3] = %f\n" RESET,
+//                                        debug_cmp[0], debug_cmp[1], debug_cmp[2], debug_cmp[3]);
+
+                    const __m128 one = _mm_set1_ps(1.0f); // или _mm_set_ps1(1.0f)
+
+                    cmp = _mm_and_ps(cmp, one);
+
+//                     _mm_store_ps (debug_cmp, cmp);
+//
+//                     printf (GRN "after  change cmp: cmp[0] = %f, cmp[1] = %f, cmp[2] = %f, cmp[3] = %f\n" RESET,
+//                                        debug_cmp[0], debug_cmp[1], debug_cmp[2], debug_cmp[3]);
                 }
 
                 alignas (16) float number_iteration_float[4] = {};
@@ -314,10 +337,8 @@ inline bool mm_cmple_ps111 (float first_array[NUMBER_POINTS_IN_PACK], float seco
     return 1;
 }
 
-void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale)
+void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy)
 {
-    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
-
     for (int itest = 0; itest < ntimes; itest++)
     {
         assert (itest < ntimes);
