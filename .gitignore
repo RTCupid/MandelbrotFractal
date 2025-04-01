@@ -4,3 +4,6 @@
 sfml-app
 build/obj/
 build/bin/
+perf.data
+perf.data.old
+Measuring.txt
