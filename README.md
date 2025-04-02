@@ -10,6 +10,8 @@
 
 ## Annotation
 
+I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 1.25x increase in FPS. However increase of fps after using intrinsics less than expected. This is probably due to the fact that with optimization key -O2 compiler optimized common version using xmm registers to vectorization some calculations. Also it could be due to a flaw in my intrinsics function, for example bigger number of variables, which caused the processor to read some data from memory during calculations.
+
 ## Introduction
 
   In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is badly optimized by the compiler if they are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
@@ -48,6 +50,8 @@
   However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
 
 ## Conclusion
+
+The results show that the use of intrinsics allows to optimize programs, especially it is effective when the same calculations are performed for a lot of data.
 
 ## Appendix
 
