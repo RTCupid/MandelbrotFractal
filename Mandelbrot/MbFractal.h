@@ -19,9 +19,9 @@ const float    SQUARED_R_MAX    = 10 * 10;
 
 const int      FACTOR_D         = 400;
 
-const int      SIZE_SCREEN_X    = 2400;
+const int      SIZE_SCREEN_X    = 1200;
 
-const int      SIZE_SCREEN_Y    = 1600;
+const int      SIZE_SCREEN_Y    = 800;
 
 int   RunMandelbrotFractal           (char* mode, int ntimes = 1);
 
