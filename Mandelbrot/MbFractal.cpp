@@ -40,7 +40,7 @@ int RunMandelbrotFractal (char* mode, int ntimes)
     navigation_t nvg {0, 0, 1};
 
     FILE* Measuring_FILE = fopen ("Measuring.txt", "w");
-    if (!Measuring_FILE)
+    if (Measuring_FILE == NULL)
     {
         fprintf (stderr, RED "ERROR: can't open file to write \"Measuring.txt\"\n" RESET);
     }
@@ -108,6 +108,8 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         window.display ();
     }
+
+    fclose (Measuring_FILE);
 
     printf (GRN "End of main cycle of graphics and fractal\n" RESET);
     return 0;
