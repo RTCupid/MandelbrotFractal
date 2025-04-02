@@ -1,8 +1,8 @@
 #ifndef MANDELBROTFRACTAL_H
 #define MANDELBROTFRACTAL_H
 
+#include <SFML/Graphics.hpp>
 #include <xmmintrin.h>
-// nav
 
 typedef struct navigation_t
 {

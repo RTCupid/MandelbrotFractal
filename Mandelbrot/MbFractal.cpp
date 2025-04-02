@@ -4,9 +4,6 @@
 #include <string.h>
 #include <SFML/Graphics.hpp>
 #include <xmmintrin.h>
-#include <immintrin.h>
-#include <emmintrin.h>
-#include <smmintrin.h>
 
 #include "MbFractal.h"
 #include "../common/colors.h"
