@@ -31,25 +31,44 @@
 
 ### Measurements
 
-  
+  I made two variants of program for calculate Mandelbrot fractal. First method included common calculations for each point. But with optimization key -O2 compiler optimized it using xmm registers to vectorization some calculations. To compare I made second method where I independently realized vectorization and used intrinsics for calculations. Progress of making program you can see in Appendix A.
+  Time measured using the Time class in the sfml library. Each value of time included 120 complete calculations. This is made to make less random error from the experiment. Was used optimization key -O2. The measurements were made at the same time with the same system condition. The obtained values are given in Appendix B. Visual picture of this values you can see in the Figure 2.
 
+  <img src="/img/Measurings.png">
+  <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods. Green points are experimental values which were obtained in the experiment with the common cycle calculation. Blue points for the cycle calculation with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
   
 
 ## Conclusion
 
 ## Appendix
 
-### Progress of work
+### Appendix A. Progress of work
 
-  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other.
+  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
 
-  <img src="/img/LoopForFourPoints.png">
-  <div align="center"> Fig. 2. Code of Mandelbrot fractal with using loop for four points.</div><br>
-
-  <img src="/img/LoopForFourPointsFps.png">
-  <div align="center"> Fig. 3. Mandelbrot fractal with using loop for four points. You can see that the fps is higher than in common version. The compilation was performed without using optimization keys</div><br>
-
-  You can compare fps in Figure 3 with fps in Figure 4. Fps when using a 4-point loop is higher than in common code.
+  <img src="/img/FPSINTRINSICS.png">
+  <div align="center"> Fig. 3. Mandelbrot fractal with using intrinsics. The fps is higher than in common version. The compilation was performed with optimization key -O2.</div><br>
 
    <img src="/img/CommonFpsForCompareWithLoopFourPoints.png">
   <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed without using optimization keys</div><br>
+
+  However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
+
+### Appendix B. Experimental values
+
+  | N      | Common time, s ± 10<sup>-6</sup> | Intrinsics time, s ± 10<sup>-6</sup>  | N      |  Common time, s ± 10<sup>-6</sup> | Intrinsics time, s ± 10<sup>-6</sup>|
+  |:------:|:--------------:|:-------------------:|:------:|:----------------:|:------------------:|
+  | 1      | 29.172709      | 24.573540           | 11     | 29.151709        | 25.225914          |
+  | 2      | 29.149599      | 23.816408           | 12     | 29.261366        | 24.619513          |
+  | 3      | 29.113285      | 23.892267           | 13     | 29.269333        | 24.875324          |
+  | 4      | 29.067999      | 24.606806           | 14     | 29.143482        | 24.437838          |
+  | 5      | 29.329220      | 24.567129           | 15     | 29.156736        | 24.767895          |
+  | 6      | 29.291000      | 24.913528           | 16     | 29.186344        | 24.719604          |
+  | 7      | 29.097939      | 24.651991           | 17     | 29.096285        | 24.585064          |
+  | 8      | 29.290800      | 24.828905           | 18     | 29.154882        | 25.225779          |
+  | 9      | 29.157974      | 24.869411           | 19     | 29.247868        | 25.853722          |
+  | 10     | 29.026993      | 24.694475           | 20     | 29.231627        | 26.203354          |
+  
+  <div align="center"> Tab. 1. Experimental values of time dependence for the common variant (columns "common") and for the variant using intrinsics (columns "intrinsics"). Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment. For each methods made 20 measurments</div><br>
+
+SFML class time has instrumental error about 1 ms. 
