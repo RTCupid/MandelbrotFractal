@@ -28,9 +28,7 @@ int main(int argc, char* argv[])
     {
         printf (RED "Unknown mode of program\n"
             "Enter \"common\" or \"intrinsics\"\n" RESET);
-        return 0;
     }
-
 
     return 0;
 }

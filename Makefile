@@ -14,7 +14,7 @@ LINUXFLAGSDEBUG = -D _DEBUG -ggdb3 -O0 -std=c++17 -Wall -Wextra -Weffc++ \
 	nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,$\
 	signed-integer-overflow,undefined,unreachable,vla-bound,vptr -mavx2
 
-LINUXFLAGRELIZE = -O3 -std=c++17 -Wall -Wextra -march=native -mavx2 -ggdb3
+LINUXFLAGRELIZE = -O2 -std=c++17 -Wall -Wextra -march=native -mavx2 -ggdb3
 
 
 BIN_DIR = ./build/bin
