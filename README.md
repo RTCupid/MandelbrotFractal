@@ -10,7 +10,7 @@
 
 ## Annotation
 
-I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 1.25x increase in FPS. However increase of fps after using intrinsics less than expected. This is probably due to the fact that with optimization key -O2 compiler optimized common version using xmm registers to vectorization some calculations. Also it could be due to a flaw in my intrinsics function, for example bigger number of variables, which caused the processor to read some data from memory during calculations.
+I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 1.19x increase in FPS. However increase of fps after using intrinsics less than expected. This is probably due to the fact that with optimization key -O2 compiler optimized common version using xmm registers to vectorization some calculations. Also it could be due to a flaw in my intrinsics function, for example bigger number of variables, which caused the processor to read some data from memory during calculations.
 
 ## Introduction
 
@@ -46,6 +46,8 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
    <img src="/img/FPSCOMMON.png">
   <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
+
+  I found fps using average time. Average time for the common version is 29.170368 ± 10<sup>-6</sup>, for the version with intrinsics is 24.623226 ± 10<sup>-6</sup>. Then fps in the intrinsic version is 0.0406, in the common version is 0.0342. Total, the increase in fps is 19%.
 
   However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
 
