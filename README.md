@@ -30,6 +30,8 @@ I made two version for calculations points in Mandelbrot fractal. First version 
   <div align="center"> Fig. 1. My graphics of Mandelbrot fractal. Black points is points that belong Mandelbrot fractal, purple points don't belong Mandelbrot fractal and have any shade for beauty visual effect.</div><br>
 
   Also model have command line argument "ntests" which shows how many times to calculate all points in one screen update. This is so that you can find the time with less error if you have more calculations in one test. By default ntests = 1.
+  
+  Some amazing places of my Mandelbrot fractal you can see in Appendix C.
 
 ### Measurements
 
@@ -111,3 +113,17 @@ for (;; niteration = _mm_add_ps (niteration, cmp))
   <div align="center"> Tab. 1. Experimental values of time dependence for the common variant (columns "common") and for the variant using intrinsics (columns "intrinsics"). Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment. For each methods made 20 measurments</div><br>
 
 SFML class time has instrumental error about 1 ms. 
+
+### Appendix C. Some amazing places
+
+  <img src="/img/BEAUTYPICTUREFIRST.png">
+  <div align="center"> Fig. 5</div><br>
+
+  <img src="/img/BEAUTYPICTURETHIRD.png">
+  <div align="center"> Fig. 6</div><br>
+
+  <img src="/img/BEAUTYPICTURESECOND.png">
+  <div align="center"> Fig. 7</div><br>
+
+  <img src="/img/BEAUTYPICTURE4TH.png">
+  <div align="center"> Fig. 8</div><br>
