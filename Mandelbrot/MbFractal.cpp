@@ -182,8 +182,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y = _mm_add_ps (X_Y, X_Y);
                     Y = _mm_add_ps (Y, array_Y0);
 
-                    //const __m128 one = ;
-
                     cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
                 }
 
@@ -203,12 +201,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
     }
     return;
 }
-
-//                 alignas (16) float debug_niteration[4] = {};
-//                 _mm_store_ps (debug_niteration, niteration);
-//
-//                  printf (GRN "after loop nit: nit[0] = %f, nit[1] = %f, nit[2] = %f, nit[3] = %f\n" RESET,
-//                                        debug_niteration[0], debug_niteration[1], debug_niteration[2], debug_niteration[3]);
 
 void PrintArray (float array[NUMBER_POINTS_IN_PACK])
 {

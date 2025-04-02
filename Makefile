@@ -22,13 +22,13 @@ BIN_DIR = ./build/bin
 OBJ_DIR = ./build/obj
 
 ./sfml-app: $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o
-	$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGSDEBUG)
+	$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGSRELIZE)
 
 $(OBJ_DIR)/main.o: main.cpp Mandelbrot/MbFractal.h
-	$(CC) -c main.cpp -o $(OBJ_DIR)/main.o $(LINUXFLAGSDEBUG)
+	$(CC) -c main.cpp -o $(OBJ_DIR)/main.o $(LINUXFLAGSRELIZE)
 
 $(OBJ_DIR)/MbFractal.o: Mandelbrot/MbFractal.cpp Mandelbrot/MbFractal.h
-	$(CC) -c Mandelbrot/MbFractal.cpp -o $(OBJ_DIR)/MbFractal.o $(LINUXFLAGSDEBUG)
+	$(CC) -c Mandelbrot/MbFractal.cpp -o $(OBJ_DIR)/MbFractal.o $(LINUXFLAGSRELIZE)
 
 clean:
 	rm -f main $(OBJ_DIR)/*.o
