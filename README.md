@@ -16,7 +16,7 @@
 
 ## Methods
 
-  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions. For check this factor you can make basic version, find time it takes, and compare it before each measurement. 
+  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions. 
 
 ## Results
 
@@ -36,7 +36,16 @@
 
   <img src="/img/Measurings.png">
   <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods. Green points are experimental values which were obtained in the experiment with the common cycle calculation. Blue points for the cycle calculation with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
-  
+
+  You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
+
+  <img src="/img/FPSINTRINSICS.png">
+  <div align="center"> Fig. 3. Mandelbrot fractal with using intrinsics. The fps is higher than in common version. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
+
+   <img src="/img/FPSCOMMON.png">
+  <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
+
+  However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
 
 ## Conclusion
 
@@ -44,15 +53,39 @@
 
 ### Appendix A. Progress of work
 
-  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
+  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. The next block of code shows what the main loop of the Mandelbrot calculation looks like using intrinsics.
 
-  <img src="/img/FPSINTRINSICS.png">
-  <div align="center"> Fig. 3. Mandelbrot fractal with using intrinsics. The fps is higher than in common version. The compilation was performed with optimization key -O2.</div><br>
+```c++
+for (;; niteration = _mm_add_ps (niteration, cmp))
+{
+    cmp = _mm_cmple_ps (niterationmax, niteration);
 
-   <img src="/img/CommonFpsForCompareWithLoopFourPoints.png">
-  <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed without using optimization keys</div><br>
+    int    mask      = _mm_movemask_ps (cmp);
 
-  However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
+    if (mask) break;
+
+    __m128 squared_X = _mm_mul_ps (X, X);
+    __m128 squared_Y = _mm_mul_ps (Y, Y);
+    __m128       X_Y = _mm_mul_ps (X, Y);
+
+    __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
+
+    cmp  = _mm_cmple_ps (squared_r, squared_r_max);
+
+    mask = _mm_movemask_ps (cmp);
+
+    if (!mask) break;
+
+    X = _mm_sub_ps (squared_X, squared_Y);
+    X = _mm_add_ps (X        , array_X0);
+    X = _mm_add_ps (X        , array_dx_scale_index);
+
+    Y = _mm_add_ps (X_Y, X_Y);
+    Y = _mm_add_ps (Y, array_Y0);
+
+    cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+}
+```
 
 ### Appendix B. Experimental values
 
