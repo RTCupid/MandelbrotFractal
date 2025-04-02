@@ -38,7 +38,7 @@ I made two version for calculations points in Mandelbrot fractal. First version 
   I made two variants of program for calculate Mandelbrot fractal. First method included common calculations for each point. But with optimization key -O2 compiler optimized it using xmm registers to vectorization some calculations. To compare I made second method where I independently realized vectorization and used intrinsics for calculations. Progress of making program you can see in Appendix A.
   Time measured using the Time class in the sfml library. Each value of time included 120 complete calculations. This is made to make less random error from the experiment. Was used optimization key -O2. The measurements were made at the same time with the same system condition. The obtained values are given in Appendix B. Visual picture of this values you can see in the Figure 2.
 
-  <img src="/img/Measurings.png">
+  <div align="center"><img src="/img/Measurings.png"></div><br>
   <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods. Green points are experimental values which were obtained in the experiment with the common cycle calculation. Blue points for the cycle calculation with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
 
   You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
@@ -117,13 +117,13 @@ SFML class time has instrumental error about 1 ms.
 ### Appendix C. Some amazing places
 
   <img src="/img/BEAUTYPICTUREFIRST.png">
-  <div align="center"> Fig. 5</div><br>
+  <div align="center"> Fig. 5. First beauty place</div><br>
 
   <img src="/img/BEAUTYPICTURETHIRD.png">
-  <div align="center"> Fig. 6</div><br>
+  <div align="center"> Fig. 6. Second beauty place </div><br>
 
   <img src="/img/BEAUTYPICTURESECOND.png">
-  <div align="center"> Fig. 7</div><br>
+  <div align="center"> Fig. 7. Third beauty place</div><br>
 
-  <img src="/img/BEAUTYPICTURE4TH.png">
-  <div align="center"> Fig. 8</div><br>
+  <img src="/img/PEAUTYPICTURE4TH.png">
+  <div align="center"> Fig. 8. Last beauty place</div><br>
