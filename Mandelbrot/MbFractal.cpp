@@ -63,25 +63,11 @@ int RunMandelbrotFractal (char* mode, int ntimes)
 
         if      (strcmp (mode, "common") == 0)
         {
-            float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
-
-            CommonCalculateMandelbrot     (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy);
+            CommonCalculateMandelbrot     (&points, ntimes, nvg);
         }
         else if (strcmp (mode, "intrinsics") == 0)
         {
-            float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
-
-            const __m128 array_index          = _mm_set_ps   (3.0f, 2.0f, 1.0f, 0.0f);
-
-            const __m128 array_dx_scale       = _mm_set_ps1  (dx * nvg.scale);
-
-            const __m128 array_dx_scale_index = _mm_mul_ps   (array_dx_scale, array_index);
-
-            const __m128 niterationmax        = _mm_set_ps1  (NITERATIONMAX);
-
-            const __m128 squared_r_max        = _mm_set_ps1  (SQUARED_R_MAX);
-
-            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg.offset_x, nvg.offset_y, nvg.scale, dx, dy, niterationmax, squared_r_max, array_dx_scale_index);
+            IntrinsicsCalculateMandelbrot (&points, ntimes, nvg);
         }
         else
         {
@@ -125,65 +111,62 @@ void Navigation (navigation_t* nvg)
     return;
 }
 
-void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy,
-                                                                __m128 niterationmax, __m128 squared_r_max, __m128 array_dx_scale_index)
+void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, navigation_t nvg)
 {
+    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
+
+    const __m128 array_dx_scale_index  = _mm_mul_ps   (_mm_set_ps1  (dx * nvg.scale), _mm_set_ps   (3.0f, 2.0f, 1.0f, 0.0f));
+
+    const __m128 niterationmax         = _mm_set_ps1  (NITERATIONMAX);
+
+    const __m128 squared_r_max         = _mm_set_ps1  (SQUARED_R_MAX);
+
+          __m128 cmp                   = _mm_set_ps1  (1);
+
     for (int itest = 0; itest < ntimes; itest++)
     {
-        assert (itest < ntimes);
-
         for (int iy = 0; iy < SIZE_SCREEN_Y; iy++)
         {
-            assert (iy < SIZE_SCREEN_Y);
+            float X0 = START_X + nvg.offset_x ;                                      //; start from upper left cornel
 
-            float X0 = -2 + offset_x ;                                      //; start from upper left cornel
-            float Y0 =  1 + offset_y - (float)iy * dy * scale;
+            __m128 array_X0_dx_scale_index  = _mm_add_ps (_mm_set_ps1 (X0), array_dx_scale_index);
 
-            __m128 array_Y0 = _mm_set_ps1 (Y0);
+            __m128 array_Y0                 = _mm_set_ps1 (START_Y + nvg.offset_y - (float)iy * dy * nvg.scale);
 
-            for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, X0 += NUMBER_POINTS_IN_PACK * dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, array_X0_dx_scale_index = _mm_add_ps (array_X0_dx_scale_index, _mm_set_ps1  (NUMBER_POINTS_IN_PACK * dx * nvg.scale)))
             {
-                assert (ix < SIZE_SCREEN_X);
-
-                __m128 array_X0 = _mm_set_ps1 (X0);
-
-                __m128 X = _mm_add_ps  (array_X0, array_dx_scale_index);
-                __m128 Y = _mm_set_ps1 (Y0);
-
                 __m128 niteration = _mm_set_ps1 (0);
 
-                __m128 cmp        = _mm_set_ps1 (1);
+                __m128 X          = array_X0_dx_scale_index;
+                __m128 Y          = array_Y0;
 
                 while (true)
                 {
-                    cmp = _mm_cmple_ps (niterationmax, niteration);
-
-                    int    mask      = _mm_movemask_ps (cmp);
-
-                    if (mask) break;
-
                     __m128 squared_X = _mm_mul_ps (X, X);
                     __m128 squared_Y = _mm_mul_ps (Y, Y);
                     __m128       X_Y = _mm_mul_ps (X, Y);
 
                     __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
 
-                    cmp  = _mm_cmple_ps (squared_r, squared_r_max);
+                    cmp              = _mm_cmple_ps (squared_r, squared_r_max);
 
-                    mask = _mm_movemask_ps (cmp);
+                    int mask         = _mm_movemask_ps (cmp);
 
                     if (!mask) break;
 
-                    X = _mm_sub_ps (squared_X, squared_Y);
-                    X = _mm_add_ps (X        , array_X0);
-                    X = _mm_add_ps (X        , array_dx_scale_index);
+                    X          = _mm_add_ps (_mm_sub_ps (squared_X, squared_Y), array_X0_dx_scale_index);
 
-                    Y = _mm_add_ps (X_Y, X_Y);
-                    Y = _mm_add_ps (Y, array_Y0);
+                    Y          = _mm_add_ps (_mm_add_ps (X_Y, X_Y), array_Y0);
 
-                    cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+                    cmp        = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
 
                     niteration = _mm_add_ps (niteration, cmp);
+
+                    cmp        = _mm_cmple_ps (niterationmax, niteration);
+
+                    mask       = _mm_movemask_ps (cmp);
+
+                    if (mask) break;
                 }
 
                 alignas (16) float number_iteration_float[4] = {};
@@ -192,8 +175,6 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
                 {
-                    assert (index < NUMBER_POINTS_IN_PACK);
-
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].position = sf::Vector2f(static_cast<float>(ix + index), static_cast<float>(iy));
                     (*points)[(size_t)(iy * SIZE_SCREEN_X + ix + index)].color    = sf::Color((sf::Uint8)(256 - ((int)number_iteration_float[index]) * 16), 0, (sf::Uint8)(256 - ((int)number_iteration_float[index]) * 16));
                 }
@@ -212,8 +193,11 @@ void PrintArray (float array[NUMBER_POINTS_IN_PACK])
     printf ("\n");
 }
 
-void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy)
+void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, navigation_t nvg)
 {
+    float dx = (float)1 / FACTOR_D, dy = (float)1 / FACTOR_D;
+
+
     for (int itest = 0; itest < ntimes; itest++)
     {
         assert (itest < ntimes);
@@ -223,10 +207,10 @@ void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offse
             //fprintf (stderr, BLU "iy = <%d>" RESET, iy);
             assert (iy < SIZE_SCREEN_Y);
 
-            float X0 = -2 + offset_x ;                                      //; start from upper left cornel
-            float Y0 =  1 + offset_y - (float)iy * dy * scale;
+            float X0 = -2 + nvg.offset_x ;                                      //; start from upper left cornel
+            float Y0 =  1 + nvg.offset_y - (float)iy * dy * nvg.scale;
 
-            for (int ix = 0; ix < SIZE_SCREEN_X; ix++, X0 += dx * scale)
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix++, X0 += dx * nvg.scale)
             {
                 //fprintf (stderr, BLU "ix = <%d>" RESET, ix);
                 assert (ix < SIZE_SCREEN_X);
