@@ -154,7 +154,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
 
                 __m128 cmp        = _mm_set_ps1 (1);
 
-                for (;; niteration = _mm_add_ps (niteration, cmp))
+                while (true)
                 {
                     cmp = _mm_cmple_ps (niterationmax, niteration);
 
@@ -182,6 +182,8 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, float o
                     Y = _mm_add_ps (Y, array_Y0);
 
                     cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+
+                    niteration = _mm_add_ps (niteration, cmp);
                 }
 
                 alignas (16) float number_iteration_float[4] = {};
@@ -208,93 +210,6 @@ void PrintArray (float array[NUMBER_POINTS_IN_PACK])
         printf (YEL "%f | " RESET, array[index]);
     }
     printf ("\n");
-}
-
-void SetArrayIndex (float array_index[NUMBER_POINTS_IN_PACK])
-{
-    for (int index= 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        array_index[index] = (float)index;
-    }
-    return;
-}
-
-inline void mm_set_ps (float dst[NUMBER_POINTS_IN_PACK], float par1, float par2, float par3, float par4)
-{
-    dst[0] = par1;
-    dst[1] = par2;
-    dst[2] = par3;
-    dst[3] = par4;
-    return;
-}
-
-inline int mm_movemask_ps (float array[NUMBER_POINTS_IN_PACK])
-{
-    int mask = 0;
-
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        if (array[index]) mask |= 1 << index;
-    }
-
-    return mask;
-}
-
-inline void mm_cmple_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        if (first_array[index]  >= second_array[index])
-        {
-            dst[index] = 0;
-        }
-    }
-    return;
-}
-
-inline void mm_mul_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        dst[index] = first_array[index] * second_array[index];
-    }
-    return;
-}
-
-inline void mm_add_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        dst[index] = first_array[index] + second_array[index];
-    }
-    return;
-}
-
-inline void mm_sub_ps (float dst[NUMBER_POINTS_IN_PACK], float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        dst[index] = first_array[index] - second_array[index];
-    }
-    return;
-}
-
-inline void mm_set_ps1 (float dst[NUMBER_POINTS_IN_PACK], float value)
-{
-    for (int index= 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        dst[index] = value;
-    }
-    return;
-}
-
-inline bool mm_cmple_ps111 (float first_array[NUMBER_POINTS_IN_PACK], float second_array[NUMBER_POINTS_IN_PACK])
-{
-    for (int index = 0; index < NUMBER_POINTS_IN_PACK; index++)
-    {
-        if (first_array[index] >= second_array[index]) return 0;
-    }
-    return 1;
 }
 
 void CommonCalculateMandelbrot (sf::VertexArray* points, int ntimes, float offset_x, float offset_y, float scale, float dx, float dy)

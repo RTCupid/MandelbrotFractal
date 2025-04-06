@@ -14,11 +14,11 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
 ## Introduction
 
-  In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is badly optimized by the compiler if they are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
+  In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is may be badly optimized by the compiler, if in your code calculations are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
 
 ## Methods
 
-  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions. 
+  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions.
 
 ## Results
 
@@ -26,11 +26,11 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
   I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write.
 
-  <img src="/img/Fractal.png">
+  <img src="img/Fractal.png">
   <div align="center"> Fig. 1. My graphics of Mandelbrot fractal. Black points is points that belong Mandelbrot fractal, purple points don't belong Mandelbrot fractal and have any shade for beauty visual effect.</div><br>
 
   Also model have command line argument "ntests" which shows how many times to calculate all points in one screen update. This is so that you can find the time with less error if you have more calculations in one test. By default ntests = 1.
-  
+
   Some amazing places of my Mandelbrot fractal you can see in Appendix C.
 
 ### Measurements
@@ -43,10 +43,10 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
   You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
 
-  <img src="/img/FPSINTRINSICS.png">
+  <img src="img/FPSINTRINSICS.png">
   <div align="center"> Fig. 3. Mandelbrot fractal with using intrinsics. The fps is higher than in common version. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
 
-   <img src="/img/FPSCOMMON.png">
+   <img src="img/FPSCOMMON.png">
   <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
 
   I found fps using average time. Average time for the common version is 29.170368 ± 10<sup>-6</sup>, for the version with intrinsics is 24.623226 ± 10<sup>-6</sup>. Then fps in the intrinsic version is 0.0406, in the common version is 0.0342. Total, the increase in fps is 19%.
@@ -109,10 +109,10 @@ for (;; niteration = _mm_add_ps (niteration, cmp))
   | 8      | 29.290800      | 24.828905           | 18     | 29.154882        | 25.225779          |
   | 9      | 29.157974      | 24.869411           | 19     | 29.247868        | 25.853722          |
   | 10     | 29.026993      | 24.694475           | 20     | 29.231627        | 26.203354          |
-  
+
   <div align="center"> Tab. 1. Experimental values of time dependence for the common variant (columns "common") and for the variant using intrinsics (columns "intrinsics"). Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment. For each methods made 20 measurments</div><br>
 
-SFML class time has instrumental error about 1 ms. 
+SFML class time has instrumental error about 1 ms.
 
 ### Appendix C. Some amazing places
 
