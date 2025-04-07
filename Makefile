@@ -14,15 +14,14 @@ LINUXFLAGSDEBUG = -D _DEBUG -ggdb3 -O0 -std=c++17 -Wall -Wextra -Weffc++ \
 	nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,$\
 	signed-integer-overflow,undefined,unreachable,vla-bound,vptr -mavx2
 
-LINUXFLAGSRELIZE = -std=c++17 -Wall -mavx2 -O0
-
+LINUXFLAGSRELIZE = -std=c++17 -Wall -mavx2 -O3
 
 BIN_DIR = ./build/bin
 
 OBJ_DIR = ./build/obj
 
 ./sfml-app: $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o
-	@$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGSRELIZE)
+	$(CC) $(OBJ_DIR)/main.o $(OBJ_DIR)/MbFractal.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system $(LINUXFLAGSRELIZE)
 
 $(OBJ_DIR)/main.o: main.cpp Mandelbrot/MbFractal.h
 	@$(CC) -c main.cpp -o $(OBJ_DIR)/main.o $(LINUXFLAGSRELIZE)
