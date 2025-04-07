@@ -117,6 +117,12 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, navigat
 
     const __m128 array_dx_scale_index  = _mm_mul_ps   (_mm_set_ps1  (dx * nvg.scale), _mm_set_ps   (3.0f, 2.0f, 1.0f, 0.0f));
 
+    const __m128 niterationmax         = _mm_set_ps1  (NITERATIONMAX);
+
+    const __m128 squared_r_max         = _mm_set_ps1  (SQUARED_R_MAX);
+
+    const __m128 npip_dx_scale         = _mm_set_ps1  (NUMBER_POINTS_IN_PACK * dx * nvg.scale);
+
           __m128 cmp                   = _mm_set_ps1  (1);
 
     for (int itest = 0; itest < ntimes; itest++)
@@ -129,7 +135,7 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, navigat
 
             __m128 array_Y0                 = _mm_set_ps1 (START_Y + nvg.offset_y - (float)iy * dy * nvg.scale);
 
-            for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, array_X0_dx_scale_index = _mm_add_ps (array_X0_dx_scale_index, _mm_set_ps1  (NUMBER_POINTS_IN_PACK * dx * nvg.scale)))
+            for (int ix = 0; ix < SIZE_SCREEN_X; ix += NUMBER_POINTS_IN_PACK, array_X0_dx_scale_index = _mm_add_ps (array_X0_dx_scale_index, npip_dx_scale))
             {
                 __m128 niteration = _mm_set_ps1 (0);
 
@@ -144,21 +150,21 @@ void IntrinsicsCalculateMandelbrot (sf::VertexArray* points, int ntimes, navigat
 
                     __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
 
-                    cmp              = _mm_cmple_ps (squared_r, _mm_set_ps1  (SQUARED_R_MAX));
+                    cmp              = _mm_cmple_ps (squared_r, squared_r_max);
 
                     int mask         = _mm_movemask_ps (cmp);
 
                     if (!mask) break;
 
-                    cmp        = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
-
-                    niteration = _mm_add_ps (niteration, cmp);
-
                     X          = _mm_add_ps (_mm_sub_ps (squared_X, squared_Y), array_X0_dx_scale_index);
 
                     Y          = _mm_add_ps (_mm_add_ps (X_Y, X_Y), array_Y0);
 
-                    cmp        = _mm_cmple_ps (_mm_set_ps1  (NITERATIONMAX), niteration);
+                    cmp        = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+
+                    niteration = _mm_add_ps (niteration, cmp);
+
+                    cmp        = _mm_cmple_ps (niterationmax, niteration);
 
                     mask       = _mm_movemask_ps (cmp);
 
