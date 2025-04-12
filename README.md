@@ -41,27 +41,34 @@ I made two version for calculations points in Mandelbrot fractal. First version 
   <div align="center"><img src="/img/Measurings.png"></div><br>
   <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods. Green points are experimental values which were obtained in the experiment with the common cycle calculation. Blue points for the cycle calculation with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
 
-  You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code.
+  You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code. Measurements were made at the same time and with the same system state.
 
-  <img src="img/FPSINTRINSICS.png">
-  <div align="center"> Fig. 3. Mandelbrot fractal with using intrinsics. The fps is higher than in common version. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
+  <img src="img/FPSCommon.png">
+  <div align="center"> Fig. 3. Mandelbrot fractal common version. The compilation was performed without optimization keys. FPS calculated in relize version of program with ntests = 1.</div><br>
 
-   <img src="img/FPSCOMMON.png">
-  <div align="center"> Fig. 4. Common Mandelbrot fractal. Measurements were made at the same time and with the same system state. The compilation was performed with optimization key -O2. FPS calculated in relize version of program with ntests = 1.</div><br>
+   <img src="img/FPSIntrinsics.png">
+  <div align="center"> Fig. 4. Mandelbrot fractal with using intrinsics. The compilation was performed with optimization key -O3. FPS calculated in relize version of program with ntests = 1. </div><br>
 
-  I found fps using average time. Average time for the common version is 29.170368 ± 10<sup>-6</sup>, for the version with intrinsics is 24.623226 ± 10<sup>-6</sup>. Then fps in the intrinsic version is 0.0406, in the common version is 0.0342. Total, the increase in fps is 19%.
+  I found fps using average time. Results you can see in the Table 1.
+  
+  | version         | average time of 120 calculations, s ± 10<sup>-6</sup> | average time, s ± 10<sup>-6</sup> |  FPS        |
+  |-----------------|-------------------------------------------------------|-----------------------------------|-------------|
+  | Common          | 39.573971                                             | 0.329783                          |  3.032297   |
+  | Common -O3      | 19.977071                                             | 0.166475                          |  6.006907   | 
+  | Intrinsics      | 23.830571                                             | 0.198588                          |  5.035550   |
+  | Intrinsics -O3  |  6.326352                                             | 0.052719                          | 18.968493   |
 
-  However fps in version with intrinsics less than expected. I checked it in debugger radare 2 and saw that processor read some values from memory. This is probably due to the fact that there is an excessive number of variables in the program code for calculations.
+  Fps in version with intrinsics and optimization key -O3 is higher than in first version up to 6.26 times.
 
 ## Conclusion
 
-The results show that the use of intrinsics allows to optimize programs, especially it is effective when the same calculations are performed for a lot of data. My version with intrinsics showed a 1.19x increase in FPS. However increase of fps after using intrinsics less than expected. This is probably due to the fact that with optimization key -O2 compiler optimized common version using xmm registers to vectorization some calculations. Also it could be due to a flaw in my intrinsics function, for example bigger number of variables, which caused the processor to read some data from memory during calculations.
+The results show that the use of intrinsics allows to optimize programs, especially it is effective when the same calculations are performed for a lot of data. My version with intrinsics showed a 6.26x increase in FPS. Despite the fact that compiler optimized common version using xmm registers to vectorization some calculations with optimization key -O3, my version with intrinsics have 3.16 times more FPS than common version with key -O3.
 
 ## Appendix
 
 ### Appendix A. Progress of work
 
-  At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. The next block of code shows what the main loop of the Mandelbrot calculation looks like using intrinsics.
+  At first, I did a loop unrolling instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. The next block of code shows what the main loop of the Mandelbrot calculation looks like using intrinsics.
 
 ``` C++
 while (true)
@@ -95,7 +102,7 @@ while (true)
 ```
 
 ### Appendix B. Experimental values
-| N   | Common     | N   | Common     |
+| N   | Common, s ± 10<sup>-6</sup>  | N   | Common, s ± 10<sup>-6</sup>    |
 |-----|------------|-----|------------|
 | 1   | 39.586754  | 14  | 39.550892  |
 | 2   | 39.535309  | 15  | 39.498867  |
@@ -110,9 +117,9 @@ while (true)
 | 11  | 39.504421  | 24  | 39.946037  |
 | 12  | 39.622467  | 25  | 39.923641  |
 | 13  | 39.513515  |     |            |
-  <div align="center"> Tab. 1. Experimental values of time dependence for the common variant. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+  <div align="center"> Tab. 2. Experimental values of time dependence for the common variant. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-  | N   | Common-O0   | N   | Common-O0   |
+  | N   | Common-O0, s ± 10<sup>-6</sup>   | N   | Common-O0, s ± 10<sup>-6</sup>   |
 |-----|-------------|-----|-------------|
 | 1   | 39.875515   | 15  | 39.651768   |
 | 2   | 39.541359   | 16  | 39.600506   |
@@ -128,9 +135,9 @@ while (true)
 | 12  | 40.015049   | 26  | 39.579334   |
 | 13  | 39.580147   | 27  | 39.681812   |
 | 14  | 39.537243   |     |             |
-  <div align="center"> Tab. 2. Experimental values of time dependence for the common variant with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+  <div align="center"> Tab. 3. Experimental values of time dependence for the common variant with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Common-O3   | N   | Common-O3   |
+| N   | Common-O3, s ± 10<sup>-6</sup>   | N   | Common-O3, s ± 10<sup>-6</sup>   |
 |-----|-------------|-----|-------------|
 | 1   | 20.129501   | 15  | 19.933502   |
 | 2   | 20.167023   | 16  | 19.938637   |
@@ -146,9 +153,9 @@ while (true)
 | 12  | 20.171812   | 26  | 19.921955   |
 | 13  | 20.156691   | 27  | 20.092337   |
 | 14  | 20.191521   |     |             |
- <div align="center"> Tab. 3. Experimental values of time dependence for the common variant with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+ <div align="center"> Tab. 4. Experimental values of time dependence for the common variant with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics  | N   | Intrinsics  |
+| N   | Intrinsics, s ± 10<sup>-6</sup>  | N   | Intrinsics, s ± 10<sup>-6</sup>  |
 |-----|-------------|-----|-------------|
 | 1   | 23.971806   | 13  | 24.111734   |
 | 2   | 22.895058   | 14  | 24.154701   |
@@ -162,9 +169,9 @@ while (true)
 | 10  | 24.060940   | 22  | 23.666491   |
 | 11  | 24.193596   | 23  | 24.721247   |
 | 12  | 23.372887   | 24  | 24.741751   |
-<div align="center"> Tab. 4. Experimental values of time dependence for the variant with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+<div align="center"> Tab. 5. Experimental values of time dependence for the variant with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics-O0 | N   | Intrinsics-O0 |
+| N   | Intrinsics-O0, s ± 10<sup>-6</sup> | N   | Intrinsics-O0, s ± 10<sup>-6</sup> |
 |-----|---------------|-----|---------------|
 | 1   | 22.952927     | 16  | 24.940582     |
 | 2   | 22.549068     | 17  | 23.444176     |
@@ -181,9 +188,9 @@ while (true)
 | 13  | 24.082523     | 28  | 23.535872     |
 | 14  | 24.773478     | 29  | 24.032150     |
 | 15  | 23.281050     | 30  | 23.870794     |
-<div align="center"> Tab. 5. Experimental values of time dependence for the variant with intrinsics with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+<div align="center"> Tab. 6. Experimental values of time dependence for the variant with intrinsics with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics-O3 | N   | Intrinsics-O3 |
+| N   | Intrinsics-O3, s ± 10<sup>-6</sup> | N   | Intrinsics-O3, s ± 10<sup>-6</sup> |
 |-----|---------------|-----|---------------|
 | 1   | 6.336559      | 16  | 6.315622      |
 | 2   | 6.394453      | 17  | 6.318503      |
@@ -200,7 +207,7 @@ while (true)
 | 13  | 6.321612      | 28  | 6.385856      |
 | 14  | 6.323684      | 29  | 6.395294      |
 | 15  | 6.305323      | 30  | 6.407150      |
-<div align="center"> Tab. 6. Experimental values of time dependence for the variant with intrinsics with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+<div align="center"> Tab. 7. Experimental values of time dependence for the variant with intrinsics with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
 
 SFML class time has instrumental error about 1 ms.
