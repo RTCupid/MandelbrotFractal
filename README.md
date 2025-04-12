@@ -96,21 +96,113 @@ for (;; niteration = _mm_add_ps (niteration, cmp))
 ```
 
 ### Appendix B. Experimental values
+| N   | Common     | N   | Common     |
+|-----|------------|-----|------------|
+| 1   | 39.586754  | 14  | 39.550892  |
+| 2   | 39.535309  | 15  | 39.498867  |
+| 3   | 39.734772  | 16  | 39.936852  |
+| 4   | 39.546391  | 17  | 39.886246  |
+| 5   | 39.525013  | 18  | 39.925900  |
+| 6   | 39.608234  | 19  | 39.496441  |
+| 7   | 39.636932  | 20  | 39.608109  |
+| 8   | 39.844189  | 21  | 39.929169  |
+| 9   | 39.729008  | 22  | 39.544987  |
+| 10  | 39.813049  | 23  | 39.657738  |
+| 11  | 39.504421  | 24  | 39.946037  |
+| 12  | 39.622467  | 25  | 39.923641  |
+| 13  | 39.513515  |     |            |
+  <div align="center"> Tab. 1. Experimental values of time dependence for the common variant. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-  | N      | Common time, s ± 10<sup>-6</sup> | Intrinsics time, s ± 10<sup>-6</sup>  | N      |  Common time, s ± 10<sup>-6</sup> | Intrinsics time, s ± 10<sup>-6</sup>|
-  |:------:|:--------------:|:-------------------:|:------:|:----------------:|:------------------:|
-  | 1      | 29.172709      | 24.573540           | 11     | 29.151709        | 25.225914          |
-  | 2      | 29.149599      | 23.816408           | 12     | 29.261366        | 24.619513          |
-  | 3      | 29.113285      | 23.892267           | 13     | 29.269333        | 24.875324          |
-  | 4      | 29.067999      | 24.606806           | 14     | 29.143482        | 24.437838          |
-  | 5      | 29.329220      | 24.567129           | 15     | 29.156736        | 24.767895          |
-  | 6      | 29.291000      | 24.913528           | 16     | 29.186344        | 24.719604          |
-  | 7      | 29.097939      | 24.651991           | 17     | 29.096285        | 24.585064          |
-  | 8      | 29.290800      | 24.828905           | 18     | 29.154882        | 25.225779          |
-  | 9      | 29.157974      | 24.869411           | 19     | 29.247868        | 25.853722          |
-  | 10     | 29.026993      | 24.694475           | 20     | 29.231627        | 26.203354          |
+  | N   | Common-O0   | N   | Common-O0   |
+|-----|-------------|-----|-------------|
+| 1   | 39.875515   | 15  | 39.651768   |
+| 2   | 39.541359   | 16  | 39.600506   |
+| 3   | 39.528011   | 17  | 39.586075   |
+| 4   | 39.561279   | 18  | 39.549995   |
+| 5   | 39.501640   | 19  | 39.583961   |
+| 6   | 39.526173   | 20  | 39.816147   |
+| 7   | 39.534252   | 21  | 39.920002   |
+| 8   | 39.553780   | 22  | 39.572174   |
+| 9   | 39.586887   | 23  | 39.662708   |
+| 10  | 39.926250   | 24  | 39.665886   |
+| 11  | 39.645107   | 25  | 39.566689   |
+| 12  | 40.015049   | 26  | 39.579334   |
+| 13  | 39.580147   | 27  | 39.681812   |
+| 14  | 39.537243   |     |             |
+  <div align="center"> Tab. 2. Experimental values of time dependence for the common variant with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-  <div align="center"> Tab. 1. Experimental values of time dependence for the common variant (columns "common") and for the variant using intrinsics (columns "intrinsics"). Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment. For each methods made 20 measurments</div><br>
+| N   | Common-O3   | N   | Common-O3   |
+|-----|-------------|-----|-------------|
+| 1   | 20.129501   | 15  | 19.933502   |
+| 2   | 20.167023   | 16  | 19.938637   |
+| 3   | 20.144922   | 17  | 19.938656   |
+| 4   | 20.127441   | 18  | 19.929199   |
+| 5   | 19.934141   | 19  | 19.913401   |
+| 6   | 19.930944   | 20  | 19.926769   |
+| 7   | 19.921576   | 21  | 19.930563   |
+| 8   | 19.926151   | 22  | 19.932163   |
+| 9   | 19.924517   | 23  | 19.926888   |
+| 10  | 19.934677   | 24  | 19.939827   |
+| 11  | 20.086153   | 25  | 19.913111   |
+| 12  | 20.171812   | 26  | 19.921955   |
+| 13  | 20.156691   | 27  | 20.092337   |
+| 14  | 20.191521   |     |             |
+ <div align="center"> Tab. 3. Experimental values of time dependence for the common variant with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+
+| N   | Intrinsics  | N   | Intrinsics  |
+|-----|-------------|-----|-------------|
+| 1   | 23.971806   | 13  | 24.111734   |
+| 2   | 22.895058   | 14  | 24.154701   |
+| 3   | 23.211262   | 15  | 23.291079   |
+| 4   | 24.494003   | 16  | 24.241161   |
+| 5   | 24.201456   | 17  | 23.346539   |
+| 6   | 23.046597   | 18  | 24.422501   |
+| 7   | 24.715744   | 19  | 24.853439   |
+| 8   | 23.079561   | 20  | 23.955698   |
+| 9   | 23.339951   | 21  | 23.212400   |
+| 10  | 24.060940   | 22  | 23.666491   |
+| 11  | 24.193596   | 23  | 24.721247   |
+| 12  | 23.372887   | 24  | 24.741751   |
+<div align="center"> Tab. 4. Experimental values of time dependence for the variant with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+
+| N   | Intrinsics-O0 | N   | Intrinsics-O0 |
+|-----|---------------|-----|---------------|
+| 1   | 22.952927     | 16  | 24.940582     |
+| 2   | 22.549068     | 17  | 23.444176     |
+| 3   | 22.982044     | 18  | 23.847813     |
+| 4   | 23.598991     | 19  | 23.819757     |
+| 5   | 24.377777     | 20  | 24.681707     |
+| 6   | 24.310888     | 21  | 24.901627     |
+| 7   | 24.468403     | 22  | 23.835629     |
+| 8   | 23.616400     | 23  | 24.897612     |
+| 9   | 23.327295     | 24  | 23.433050     |
+| 10  | 24.296551     | 25  | 23.767220     |
+| 11  | 23.171297     | 26  | 23.994524     |
+| 12  | 23.572229     | 27  | 24.954897     |
+| 13  | 24.082523     | 28  | 23.535872     |
+| 14  | 24.773478     | 29  | 24.032150     |
+| 15  | 23.281050     | 30  | 23.870794     |
+<div align="center"> Tab. 5. Experimental values of time dependence for the variant with intrinsics with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+
+| N   | Intrinsics-O3 | N   | Intrinsics-O3 |
+|-----|---------------|-----|---------------|
+| 1   | 6.336559      | 16  | 6.315622      |
+| 2   | 6.394453      | 17  | 6.318503      |
+| 3   | 6.433603      | 18  | 6.331072      |
+| 4   | 6.348865      | 19  | 6.315866      |
+| 5   | 6.396700      | 20  | 6.323253      |
+| 6   | 6.319700      | 21  | 6.341492      |
+| 7   | 6.312135      | 22  | 6.330636      |
+| 8   | 6.315808      | 23  | 6.310057      |
+| 9   | 6.323038      | 24  | 6.330318      |
+| 10  | 6.326257      | 25  | 6.392965      |
+| 11  | 6.311866      | 26  | 6.381490      |
+| 12  | 6.320442      | 27  | 6.394530      |
+| 13  | 6.321612      | 28  | 6.385856      |
+| 14  | 6.323684      | 29  | 6.395294      |
+| 15  | 6.305323      | 30  | 6.407150      |
+<div align="center"> Tab. 6. Experimental values of time dependence for the variant with intrinsics with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
+
 
 SFML class time has instrumental error about 1 ms.
 
