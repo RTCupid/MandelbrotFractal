@@ -63,35 +63,34 @@ The results show that the use of intrinsics allows to optimize programs, especia
 
   At first, I make a 4-point loop instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. The next block of code shows what the main loop of the Mandelbrot calculation looks like using intrinsics.
 
-```c++
-for (;; niteration = _mm_add_ps (niteration, cmp))
+``` C++
+while (true)
 {
-    cmp = _mm_cmple_ps (niterationmax, niteration);
-
-    int    mask      = _mm_movemask_ps (cmp);
-
-    if (mask) break;
-
     __m128 squared_X = _mm_mul_ps (X, X);
     __m128 squared_Y = _mm_mul_ps (Y, Y);
     __m128       X_Y = _mm_mul_ps (X, Y);
 
     __m128 squared_r = _mm_add_ps (squared_X, squared_Y);
 
-    cmp  = _mm_cmple_ps (squared_r, squared_r_max);
+    cmp              = _mm_cmple_ps (squared_r, squared_r_max);
 
-    mask = _mm_movemask_ps (cmp);
+    int mask         = _mm_movemask_ps (cmp);
 
     if (!mask) break;
 
-    X = _mm_sub_ps (squared_X, squared_Y);
-    X = _mm_add_ps (X        , array_X0);
-    X = _mm_add_ps (X        , array_dx_scale_index);
+    X          = _mm_add_ps (_mm_sub_ps (squared_X, squared_Y), array_X0_dx_scale_index);
 
-    Y = _mm_add_ps (X_Y, X_Y);
-    Y = _mm_add_ps (Y, array_Y0);
+    Y          = _mm_add_ps (_mm_add_ps (X_Y, X_Y), array_Y0);
 
-    cmp = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+    cmp        = _mm_and_ps(cmp, _mm_set_ps1(1.0f));
+
+    niteration = _mm_add_ps (niteration, cmp);
+
+    cmp        = _mm_cmple_ps (niterationmax, niteration);
+
+    mask       = _mm_movemask_ps (cmp);
+
+    if (mask) break;
 }
 ```
 
