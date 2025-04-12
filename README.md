@@ -62,7 +62,7 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
 ## Conclusion
 
-The results show that the use of intrinsics allows to optimize programs, especially it is effective when the same calculations are performed for a lot of data. My version with intrinsics showed a 6.26x increase in FPS. Despite the fact that compiler optimized common version using xmm registers to vectorization some calculations with optimization key -O3, my version with intrinsics have 3.16 times more FPS than common version with key -O3.
+The fact that the intrinsic version gave a 6.26x increase in FPS shows how much it is effective when the same calculations are performed for a lot of data. Despite the fact that compiler optimized common version using xmm registers to vectorization some calculations with optimization key -O3, my version with intrinsics have 3.16 times more FPS than common version with key -O3. 
 
 ## Appendix
 
