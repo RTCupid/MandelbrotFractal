@@ -10,7 +10,7 @@
 
 ## Annotation
 
-I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 1.19x increase in FPS. However increase of fps after using intrinsics less than expected.
+I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 6.26x increase in FPS.
 
 ## Introduction
 
@@ -35,11 +35,11 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
 ### Measurements
 
-  I made two variants of program for calculate Mandelbrot fractal. First method included common calculations for each point. But with optimization key -O2 compiler optimized it using xmm registers to vectorization some calculations. To compare I made second method where I independently realized vectorization and used intrinsics for calculations. Progress of making program you can see in Appendix A.
-  Time measured using the Time class in the sfml library. Each value of time included 120 complete calculations. This is made to make less random error from the experiment. Was used optimization key -O2. The measurements were made at the same time with the same system condition. The obtained values are given in Appendix B. Visual picture of this values you can see in the Figure 2.
+  I made two variants of program for calculate Mandelbrot fractal. First method included common calculations for each point. But with optimization key -O3 compiler optimized it using xmm registers to vectorization some calculations. To compare I made second method where I independently realized vectorization and used intrinsics for calculations. You can read about progress of making program in Appendix A.
+  Time measured using the Time class in the sfml library. Each value of time included 120 complete calculations. This is made to make less random error from the experiment. Was used optimization key -O3. The measurements were made at the same time with the same system condition. The obtained values are given in Appendix B. Visual picture of this values you can see in the Figure 2.
 
-  <div align="center"><img src="/img/Measurings.png"></div><br>
-  <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods. Green points are experimental values which were obtained in the experiment with the common cycle calculation. Blue points for the cycle calculation with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
+  <div align="center"><img src="/img/Measurings.png"></div>
+  <div align="center"> Fig. 2. graph of calculation time dependence for the common variant and for the variant using intrinsics. It is made to visually show the difference in the effectiveness of the two methods with different optimization keys. The y-axis shows the time spent on 120 complete calculations of the fractal in seconds, the x-axis shows the number of the experiment for clarity. Red points are experimental values which were obtained in the common version without optimization keys. Green points are experimental values which were obtained in the common version with optimization key -O3. Orange points for the cycle calculation with intrinsics without optimization keys. Blue points for the cycle calculation with intrinsics and optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Was used optimization key -O2.</div><br>
 
   You can compare fps in Figure 3 with fps in Figure 4. Fps when using intrinsics is higher than in common code. Measurements were made at the same time and with the same system state.
 
