@@ -1,28 +1,28 @@
-# Laboratory work 3.3.3.<br>Optimization of calculations for points in Mandelbrot fractal with help of intrinsics. Making beautiful graphics with help of SFML
+# Работа 3.3.3.<br> Фрактал Мандельброта. Оптимизация времени расчёта точек и реализация графики при помощи библиотеки SFML
 
 ## Contents
-- [0. Annotation](#annotation)
-- [1. Introduction](#introduction)
-- [2. Methods](#methods)
-- [3. Results](#results)
-- [4. Conclusion](#conclusion)
-- [5. Appendix](#appendix)
+- [0. Аннотация](#аннотация)
+- [1. Введение](#введение)
+- [2. Методика](#методика)
+- [3. Результаты и их обсуждение](#результаты-и-их-обсуждение)
+- [4. Выводы](#выводы)
+- [5. Приложение](#приложение)
 
-## Annotation
+## Аннотация
 
 I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 6.26x increase in FPS.
 
-## Introduction
+## Введение
 
   In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is may be badly optimized by the compiler, if in your code calculations are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
 
-## Methods
+## Методика
 
   To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions.
 
-## Results
+## Результаты и их обсуждение
 
-### Model
+### Модель
 
   I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write.
 
@@ -33,7 +33,7 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
   Some amazing places of my Mandelbrot fractal you can see in Appendix C.
 
-### Measurements
+### Результаты измерений
 
   I made two variants of program for calculate Mandelbrot fractal. First method included common calculations for each point. But with optimization key -O3 compiler optimized it using xmm registers to vectorization some calculations. To compare I made second method where I independently realized vectorization and used intrinsics for calculations. You can read about progress of making program in Appendix A.
   Time measured using the Time class in the sfml library. Each value of time included 120 complete calculations. This is made to make less random error from the experiment. Was used optimization key -O3. The measurements were made at the same time with the same system condition. The obtained values are given in Appendix B. Visual picture of this values you can see in the Figure 2.
@@ -60,13 +60,13 @@ I made two version for calculations points in Mandelbrot fractal. First version 
 
   Fps in version with intrinsics and optimization key -O3 is higher than in first version up to 6.26 times.
 
-## Conclusion
+## Выводы
 
 The fact that the intrinsic version gave a 6.26x increase in FPS shows how much it is effective when the same calculations are performed for a lot of data. Despite the fact that compiler optimized common version using xmm registers to vectorization some calculations with optimization key -O3, my version with intrinsics have 3.16 times more FPS than common version with key -O3. 
 
-## Appendix
+## Приложение
 
-### Appendix A. Progress of work
+### Приложение А. Ход работы
 
   At first, I did a loop unrolling instead of 1-point loop, to say to compiler that status of this points independent of each other. Then I changed operations with any points to loops and made inline functions to work with array of four float numbers from it. After it I changed my functions for actions with array of four points to intrinsics, that work with type of numbers __m128. It have 128 bit and can include four numbers of type float. The next block of code shows what the main loop of the Mandelbrot calculation looks like using intrinsics.
 
@@ -101,8 +101,8 @@ while (true)
 }
 ```
 
-### Appendix B. Experimental values
-| N   | Common, s ± 10<sup>-6</sup>  | N   | Common, s ± 10<sup>-6</sup>    |
+### Приложение Б. Экспериментальные данные
+| №   | Время в обычной версии, с ± 10<sup>-6</sup>  | №   | Время в обычной времени, с ± 10<sup>-6</sup>    |
 |-----|------------|-----|------------|
 | 1   | 39.586754  | 14  | 39.550892  |
 | 2   | 39.535309  | 15  | 39.498867  |
@@ -119,7 +119,7 @@ while (true)
 | 13  | 39.513515  |     |            |
   <div align="center"> Tab. 2. Experimental values of time dependence for the common variant. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-  | N   | Common-O0, s ± 10<sup>-6</sup>   | N   | Common-O0, s ± 10<sup>-6</sup>   |
+  | №   | Время в обычной версии с ключом -O0, с ± 10<sup>-6</sup>   | №   | Время в обычной версии с ключом -O0, с ± 10<sup>-6</sup>   |
 |-----|-------------|-----|-------------|
 | 1   | 39.875515   | 15  | 39.651768   |
 | 2   | 39.541359   | 16  | 39.600506   |
@@ -137,7 +137,7 @@ while (true)
 | 14  | 39.537243   |     |             |
   <div align="center"> Tab. 3. Experimental values of time dependence for the common variant with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Common-O3, s ± 10<sup>-6</sup>   | N   | Common-O3, s ± 10<sup>-6</sup>   |
+| №   | Время в обычной версии с ключом -O3, с ± 10<sup>-6</sup>   | №   | Время в обычной версии с ключом -O3, с ± 10<sup>-6</sup>   |
 |-----|-------------|-----|-------------|
 | 1   | 20.129501   | 15  | 19.933502   |
 | 2   | 20.167023   | 16  | 19.938637   |
@@ -155,7 +155,7 @@ while (true)
 | 14  | 20.191521   |     |             |
  <div align="center"> Tab. 4. Experimental values of time dependence for the common variant with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics, s ± 10<sup>-6</sup>  | N   | Intrinsics, s ± 10<sup>-6</sup>  |
+| №   | Версия, оптимизировання интринсиками, с ± 10<sup>-6</sup>  | №   |  Версия, оптимизировання интринсиками, с ± 10<sup>-6</sup>  |
 |-----|-------------|-----|-------------|
 | 1   | 23.971806   | 13  | 24.111734   |
 | 2   | 22.895058   | 14  | 24.154701   |
@@ -171,7 +171,7 @@ while (true)
 | 12  | 23.372887   | 24  | 24.741751   |
 <div align="center"> Tab. 5. Experimental values of time dependence for the variant with intrinsics. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics-O0, s ± 10<sup>-6</sup> | N   | Intrinsics-O0, s ± 10<sup>-6</sup> |
+| №   | Версия, оптимизированная интринсиками с ключом -O0, с ± 10<sup>-6</sup> | №   | Версия, оптимизированная интринсиками с ключом -O0, с ± 10<sup>-6</sup> |
 |-----|---------------|-----|---------------|
 | 1   | 22.952927     | 16  | 24.940582     |
 | 2   | 22.549068     | 17  | 23.444176     |
@@ -190,7 +190,7 @@ while (true)
 | 15  | 23.281050     | 30  | 23.870794     |
 <div align="center"> Tab. 6. Experimental values of time dependence for the variant with intrinsics with optimization key -O0. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
-| N   | Intrinsics-O3, s ± 10<sup>-6</sup> | N   | Intrinsics-O3, s ± 10<sup>-6</sup> |
+| №   | Версия, оптимизированная интринсиками с ключом -O3, с ± 10<sup>-6</sup> | №   | Версия, оптимизированная интринсиками с ключом -O3, с ± 10<sup>-6</sup> |
 |-----|---------------|-----|---------------|
 | 1   | 6.336559      | 16  | 6.315622      |
 | 2   | 6.394453      | 17  | 6.318503      |
@@ -209,19 +209,18 @@ while (true)
 | 15  | 6.305323      | 30  | 6.407150      |
 <div align="center"> Tab. 7. Experimental values of time dependence for the variant with intrinsics with optimization key -O3. Time was measured using the Time class in the sfml library. Each point shows the time of 120 complete calculations. This is made to make less random error from the experiment. The measurements were made at the same time with the same system condition. Columns "N" - number of measurment.</div><br>
 
+Инструментальная погрешность класса time библиотеки SFML около 1 мс.
 
-SFML class time has instrumental error about 1 ms.
-
-### Appendix C. Some amazing places
+### Приложение В. Красивые места моей графики
 
   <img src="/img/BEAUTYPICTUREFIRST.png">
-  <div align="center"> Fig. 5. First beauty place</div><br>
+  <div align="center"> Рис. 5. Первое красивое место</div><br>
 
   <img src="/img/BEAUTYPICTURETHIRD.png">
-  <div align="center"> Fig. 6. Second beauty place </div><br>
+  <div align="center"> Рис. 6. Второе красивое место</div><br>
 
   <img src="/img/BEAUTYPICTURESECOND.png">
-  <div align="center"> Fig. 7. Third beauty place</div><br>
+  <div align="center"> Рис. 7. Третье красивое место</div><br>
 
   <img src="/img/PEAUTYPICTURE4TH.png">
-  <div align="center"> Fig. 8. Last beauty place</div><br>
+  <div align="center"> Рис. 8. Четвёртое красивое место</div><br>
