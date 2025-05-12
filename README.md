@@ -10,28 +10,28 @@
 
 ## Аннотация
 
-I made two version for calculations points in Mandelbrot fractal. First version included common cycle of calculations, second version used intrinsics to optimize program. My version with intrinsics showed a 6.26x increase in FPS.
+Я написал две версии программы для расчёта точек во фрактале Мандельброта. В первой версии проводился обычный расчёт точек, во второй использовались интринсики для оптимизации времени расчёта. Оптимизация при помощи интринсиков дала ускорение в 6.26 раз.
 
 ## Введение
 
-  In graphics and games, it is often necessary to calculate position and color for a large number of points using different algorithms. Optimizing this calculations is may be badly optimized by the compiler, if in your code calculations are implemented by looping calculations for each point separately. This is due to the fact that the compiler doesn't know that the calculations don't depend on each other. So, the programmer has a task to provide this information to the compiler or to realize the calculations using a more effective method. For example, a good way is to combine several numbers in a special register and use special functions built into the compiler to convert all of them. These functions are called intrinsics.
+  В графике и компьютерных играх часто необходимо рассчитывать позиции и цвет для большого количества точек. Компилятору не всегда известно зависят ли между собой данные для расчёта разных точек, однако это необходимо для того, чтобы оптимизировать расчёты путём параллельного вычисления сразу нескольких точек. Поэтому важно явно показать независимость данных. Например, можно поместить несколько чисел в 256-битный регистр и использовать для расчёта специальные функции, которые называются интринсиками.
 
 ## Методика
 
-  To compare common methods with a method that uses intrinsics, you can perform a few calculations and find the time it takes. To find this time you can use SFML class sf::Time. Also you should consider that time can vary with the state of the system and measure it under the same conditions.
+  Для сравнения эффективности обычного метода с эффективностью расчёта с помощью интринсиков можно провести расчёт определённого количества точек обоими методами, измерить и сравнить время их выполнения. Для измерения времени можно использовать класс библиотеки SFML sf::Time. Важно учесть, что время выполнения программы может зависеть от состояния машины, на которой она выполняется, поэтому следует проводить измерения при одном и том же состоянии.
 
 ## Результаты и их обсуждение
 
 ### Модель
 
-  I used the Mandelbrot fractal to test the effectiveness of the intrinsics method because it contains a large number of calculations and allows you to verify the correctness of the calculations using graphics, and because it is easy to write.
+  В качестве теста для проверки эффективности расчёта при помощи интринсиков я использовал фрактал Мандельброта, потому что на его основе можно провести расчёт для большого числа точек, а также он имеет красивую графику (см. рис. 1) и является простым в реализации.
 
   <img src="img/Fractal.png">
-  <div align="center"> Fig. 1. My graphics of Mandelbrot fractal. Black points is points that belong Mandelbrot fractal, purple points don't belong Mandelbrot fractal and have any shade for beauty visual effect.</div><br>
+  <div align="center"> Рис. 1.Моя графика для фрактала Мандельброта.Чёрным цветом показаны точки, которые принадлежат фракталу, фиолетовые - не принадлежат, и имеют разные оттенки в зависимости от того на каком шаге расчёта они выходят за границы круга некоторого радиуса с центром в точке 0 (особенностью фрактала является то, что точки, выходящие за его границы уходят на бесконечность, а точки лежащие внутри него всегда остаются внутри).</div><br>
 
-  Also model have command line argument "ntests" which shows how many times to calculate all points in one screen update. This is so that you can find the time with less error if you have more calculations in one test. By default ntests = 1.
+  Также использовался аргумент командной строки "ntests", который показывал сколько раз провести расчёт всех точек перед очередным обновлением экрана, этот параметр позволял по желанию увеличивать время расчёта для повышения точности измерений. Если он не указан, то принимается ntests = 1.
 
-  Some amazing places of my Mandelbrot fractal you can see in Appendix C.
+  Некоторые красивые места моего фрактала приведены в Приложении В.
 
 ### Результаты измерений
 
